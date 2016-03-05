@@ -7,13 +7,15 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.persistence.BackendlessDataQuery;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 
 public class Recipe implements Serializable
 {
-    private java.util.Date created;
+    private Date created;
     private String objectId;
-    private java.util.Date updated;
+    private Date updated;
     private String ownerId;
     private BackendlessUser creator;
     private String recipeName;
@@ -21,6 +23,7 @@ public class Recipe implements Serializable
     private String directions;
     private String image;
     private int likes;
+    private List<String> comments;
 
     public Recipe() {}
 
@@ -42,25 +45,33 @@ public class Recipe implements Serializable
 
     public String getDirections(){return directions;}
 
-    public java.util.Date getCreated()
+    public Date getCreated()
     {
         return created;
     }
+
+    public void setCreated(Date created){this.created=created;}
 
     public String getObjectId()
     {
         return objectId;
     }
 
-    public java.util.Date getUpdated()
+    public void setObjectId(String objectId){this.objectId=objectId;}
+
+    public Date getUpdated()
     {
         return updated;
     }
+
+    public void setUpdated(Date updated){this.updated=updated;}
 
     public String getOwnerId()
     {
         return ownerId;
     }
+
+    public void setOwnerId(String ownerId){this.ownerId=ownerId;}
 
     public BackendlessUser getCreator()
     {
@@ -79,6 +90,10 @@ public class Recipe implements Serializable
     public void setLikes(int likes){this.likes=likes;}
 
     public int getLikes(){return likes;}
+
+    public void setComments(List<String> comments){this.comments=comments;}
+
+    public List<String> getComments(){return comments;}
 
     public Recipe save()
     {

@@ -6,11 +6,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
@@ -24,15 +23,14 @@ import java.util.List;
 
 import edu.scu.rachna.yummyrecipes.R;
 import edu.scu.rachna.yummyrecipes.data.Default;
+import edu.scu.rachna.yummyrecipes.data.DialogHelper;
 import edu.scu.rachna.yummyrecipes.data.LoadingCallback;
 import edu.scu.rachna.yummyrecipes.data.Recipe;
 
 public class RecipeDetailActivity extends BaseActivity {
 
     private FloatingActionButton addNewCommentToRecipeButton;
-
-    private Recipe recipe = new Recipe();
-
+    String id;
 
 
     @Override
@@ -43,24 +41,22 @@ public class RecipeDetailActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         Backendless.initApp(this, Default.APPLICATION_ID, Default.ANDROID_SECRET_KEY,
                 Default.VERSION);
-        final String id = getIntent().getStringExtra("recipeId");
+        id = getIntent().getStringExtra("recipeId");
         //Toast.makeText(getApplicationContext(),id,Toast.LENGTH_LONG).show();
         Recipe.findByIdAsync(id, new LoadingCallback<Recipe>(this, "Getting Recipe", true) {
             @Override
             public void handleResponse(Recipe loadedrecipe) {
-                recipe = loadedrecipe;
                 TextView name = (TextView) findViewById(R.id.recipeName);
-                name.setText(recipe.getRecipeName());
+                name.setText(loadedrecipe.getRecipeName());
                 TextView ingredients = (TextView) findViewById(R.id.recipeIngredients);
-                ingredients.setText(recipe.getIngredients());
+                ingredients.setText(loadedrecipe.getIngredients());
                 TextView steps = (TextView) findViewById(R.id.recipeMethod);
-                steps.setText(recipe.getDirections());
+                steps.setText(loadedrecipe.getDirections());
                 ImageView pic = (ImageView) findViewById(R.id.recipeImage);
-                Picasso.with(getApplicationContext()).load(recipe.getImage()).fit().into(pic);
+                Picasso.with(getApplicationContext()).load(loadedrecipe.getImage()).fit().into(pic);
                 TextView likes = (TextView) findViewById(R.id.likesDisplay);
-                likes.setText(String.valueOf(recipe.getLikes()));
+                likes.setText(String.valueOf(loadedrecipe.getLikes()));
                 super.handleResponse(loadedrecipe);
-
             }
         });
 
@@ -111,4 +107,57 @@ public class RecipeDetailActivity extends BaseActivity {
          *  (e.g. Total number of likes or newly added comments) that need to be updated on RecipeDetail page
          */
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int pid = item.getItemId();
+        switch (pid) {
+            case R.id.action_share:
+                toast("Share action ...");
+                break;
+            case R.id.action_delete :
+                toast("Delete recipe Action ...");
+                break;
+            case R.id.action_mode_close_button:
+                this.finish();
+                break;
+            case R.id.action_like:
+
+                Recipe.findByIdAsync(id, new LoadingCallback<Recipe>(this, false) {
+                    @Override
+                    public void handleResponse(Recipe loadedrecipe) {
+                        TextView likes = (TextView) findViewById(R.id.likesDisplay);
+                        likes.setText(String.valueOf(loadedrecipe.getLikes()+1));
+                        loadedrecipe.setLikes(loadedrecipe.getLikes()+1);
+                        loadedrecipe.saveAsync(
+                                new LoadingCallback<Recipe>(RecipeDetailActivity.this, false) {
+                                    @Override
+                                    public void handleResponse(Recipe recipe) {
+                                        super.handleResponse(recipe);
+
+                                    }
+
+                                    @Override
+                                    public void handleFault(BackendlessFault fault) {
+                                        progressDialog.dismiss();
+
+                                        DialogHelper.createErrorDialog(RecipeDetailActivity.this,
+                                                "BackendlessFault",
+                                                fault.getMessage()).show();
+                                    }
+                                });
+                        super.handleResponse(loadedrecipe);
+                    }
+                });
+
+
+
+                break;
+            default :
+                this.finish();
+                break;
+        }
+        return true;
+    }
+
 }

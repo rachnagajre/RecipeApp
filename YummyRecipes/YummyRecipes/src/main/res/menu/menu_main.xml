@@ -1,0 +1,29 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.BaseActivity">
+    <item
+        android:id="@+id/action_like"
+        android:icon="@drawable/ic_action_like"
+        android:orderInCategory="140"
+        app:showAsAction="always"
+        android:title="Like"/>
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_action_share"
+        android:orderInCategory="140"
+        app:showAsAction="ifRoom"
+        android:title="Share"/>
+    <item
+        android:id="@+id/action_delete"
+        android:icon="@drawable/ic_action_remove"
+        android:orderInCategory="150"
+        app:showAsAction="ifRoom"
+        android:title="Delete"/>
+    <item android:id="@+id/action_mode_close_button"
+        android:layout_gravity=""
+        android:title="Close"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:orderInCategory="160"
+        app:showAsAction="always" />
+</menu>

@@ -69,5 +69,6 @@
     <string name="register_prompt">Do not have an account? Register now</string>
     <string name="register_link">Register</string>
     <string name="title_activity_add_comment">Recipe Name</string>
+    <string name="title_activity_my_recipe">MyRecipeActivity</string>
 
 </resources>

@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
+import com.backendless.BackendlessUser;
 import com.backendless.persistence.BackendlessDataQuery;
 import com.backendless.persistence.QueryOptions;
 
@@ -32,6 +33,7 @@ import edu.scu.rachna.yummyrecipes.R;
 import edu.scu.rachna.yummyrecipes.adapter.DashboardRecipesAdapter;
 import edu.scu.rachna.yummyrecipes.data.DashboardRowData;
 import edu.scu.rachna.yummyrecipes.data.Default;
+import edu.scu.rachna.yummyrecipes.data.DefaultCallback;
 import edu.scu.rachna.yummyrecipes.data.LoadingCallback;
 import edu.scu.rachna.yummyrecipes.data.Recipe;
 
@@ -84,11 +86,9 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
     }
 
     private void initializeRecipesList() {
-        Recipe.getAllRecipes(new LoadingCallback<BackendlessCollection<Recipe>>( this, "Getting Recipes", true )
-        {
+        Recipe.getAllRecipes(new LoadingCallback<BackendlessCollection<Recipe>>(this, "Getting Recipes", true) {
             @Override
-            public void handleResponse( BackendlessCollection<Recipe> loadedrecipes )
-            {
+            public void handleResponse(BackendlessCollection<Recipe> loadedrecipes) {
                 mBackendlessCollection = loadedrecipes;
 
                 convertToList(loadedrecipes);
@@ -161,15 +161,22 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
         int id = item.getItemId();
 
         switch(id) {
-            case R.id.homeButton :
-                Toast.makeText(getApplicationContext(), "Navigation Home clicked!!.", Toast.LENGTH_SHORT).show();
-                break;
             case R.id.myRecipesButton :
-                Toast.makeText(getApplicationContext(), "Navigation My Recipes clicked!!.", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getApplicationContext(), "Navigation My Recipes clicked!!.", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, MyRecipeActivity.class));
                 break;
             case R.id.logOutButton :
-              Toast.makeText(getApplicationContext(), "Navigation Logout clicked!!.", Toast.LENGTH_SHORT).show();
-               // Backendless.UserService.logout();
+              //Toast.makeText(getApplicationContext(), "Navigation Logout clicked!!.", Toast.LENGTH_SHORT).show();
+                Backendless.UserService.logout( new DefaultCallback<Void>( DashboardActivity.this )
+                {
+                    @Override
+                    public void handleResponse( Void response )
+                    {
+                        super.handleResponse( response );
+                        startActivity( new Intent( getBaseContext(), LoginActivity.class ) );
+                        finish();
+                    }
+                } );
                 break;
             case R.id.aboutButton :
                 Toast.makeText(getApplicationContext(), "Navigation About clicked!!.", Toast.LENGTH_SHORT).show();

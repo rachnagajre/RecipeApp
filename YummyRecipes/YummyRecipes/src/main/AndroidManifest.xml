@@ -45,6 +45,10 @@
 
         <service android:name="com.backendless.AndroidService" />
 
+        <activity
+            android:name=".activity.MyRecipeActivity"
+            android:label="@string/title_activity_my_recipe"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -210,7 +210,7 @@ public class RecipeDetailActivity extends BaseActivity {
 
                     if(packageName.contains("android.email")) {
                         emailIntent.putExtra(Intent.EXTRA_TEXT, sb.toString());
-                        emailIntent.putExtra(Intent.EXTRA_SUBJECT, loadedRecipe.getRecipeName());
+                        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Recipe : " + loadedRecipe.getRecipeName());
                         emailIntent.setType("message/rfc822");
                         downloadAndAttachImageFromBackendLessAsync(emailIntent, loadedRecipe);
                         emailIntent.setPackage(packageName);
@@ -228,7 +228,7 @@ public class RecipeDetailActivity extends BaseActivity {
                             intent.putExtra(Intent.EXTRA_TEXT, sb.toString());
                             downloadAndAttachImageFromBackendLessAsync(intent, loadedRecipe);
                             if(packageName.contains("com.google.android.gm")) {
-                                intent.putExtra(Intent.EXTRA_SUBJECT, loadedRecipe.getRecipeName());
+                                intent.putExtra(Intent.EXTRA_SUBJECT, "Recipe : " + loadedRecipe.getRecipeName());
                             }
                         }
                         intentList.add(new LabeledIntent(intent, packageName, rInfo.loadLabel(pm), rInfo.icon));

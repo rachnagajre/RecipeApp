@@ -1,5 +1,6 @@
 package edu.scu.rachna.yummyrecipes.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -51,21 +52,8 @@ public class BaseActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_share:
-                toast("Share action ...");
-                break;
-            case R.id.action_delete :
-                toast("Delete recipe Action ...");
-                break;
             case R.id.action_mode_close_button:
                 this.finish();
-                break;
-            case R.id.action_like:
-                /**
-                 * TODO : Increment Like counter on backend less for current recipe and reload the data for RecipeDetailActivity
-                 * Reloading RecipeDetailActivity should reload the total like counter on page
-                 */
-                toast("Like action");
                 break;
             default :
                 this.finish();

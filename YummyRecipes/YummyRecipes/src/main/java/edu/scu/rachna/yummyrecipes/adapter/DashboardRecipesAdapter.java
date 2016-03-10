@@ -98,7 +98,7 @@ public class DashboardRecipesAdapter extends BaseAdapter {
     }
 
     private void navigateToRecipeDetails(Recipe recipe) {
-        //TODO : Go to Recipe Details page and pass the required recipeItemId in intent
+        //Go to Recipe Details page and pass the required recipeItemId in intent
         Intent recipeDetailIntent = new Intent(context, RecipeDetailActivity.class);
         recipeDetailIntent.putExtra("recipeId", recipe.getObjectId());
         context.startActivity(recipeDetailIntent);

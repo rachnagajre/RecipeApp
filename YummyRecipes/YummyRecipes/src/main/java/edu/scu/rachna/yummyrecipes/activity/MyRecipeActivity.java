@@ -1,15 +1,35 @@
 package edu.scu.rachna.yummyrecipes.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.GridView;
+import android.widget.Toast;
+
+import com.backendless.Backendless;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.scu.rachna.yummyrecipes.R;
+import edu.scu.rachna.yummyrecipes.data.DefaultCallback;
+import edu.scu.rachna.yummyrecipes.data.Recipe;
 
-public class MyRecipeActivity extends AppCompatActivity {
+public class MyRecipeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private FloatingActionButton addNewRecipeButton;
+
+    private GridView myRecipesGridView;
+
+    private List<Recipe> myRecipesList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,14 +38,75 @@ public class MyRecipeActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.my_recipe_drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.my_recipes_nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        addNewRecipeButton = (FloatingActionButton) findViewById(R.id.addNewRecipeButton);
+        addNewRecipeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                navigateToAddNewRecipe();
             }
         });
+
+    }
+
+    private void navigateToAddNewRecipe() {
+        Intent addNewRecipeIntent = new Intent(MyRecipeActivity.this, AddRecipeActivity.class);
+        startActivity(addNewRecipeIntent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.my_recipe_drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        switch(id) {
+            case R.id.homeButton :
+                startActivity(new Intent(this, DashboardActivity.class));
+                break;
+            case R.id.myRecipesButton :
+                // Toast.makeText(getApplicationContext(), "Navigation My Recipes clicked!!.", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, MyRecipeActivity.class));
+                break;
+            case R.id.logOutButton :
+                //Toast.makeText(getApplicationContext(), "Navigation Logout clicked!!.", Toast.LENGTH_SHORT).show();
+                Backendless.UserService.logout( new DefaultCallback<Void>(MyRecipeActivity.this)
+                {
+                    @Override
+                    public void handleResponse( Void response )
+                    {
+                        super.handleResponse( response );
+                        startActivity( new Intent( getBaseContext(), LoginActivity.class ) );
+                        finish();
+                    }
+                } );
+                break;
+            case R.id.helpButton :
+                Toast.makeText(getApplicationContext(), "Navigation Help clicked!!.", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.my_recipe_drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
 }

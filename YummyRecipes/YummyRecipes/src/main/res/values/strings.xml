@@ -4,7 +4,7 @@
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
+    <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
@@ -51,10 +51,10 @@
     <string name="loading_register">Sending registration request…</string>
     <string name="loading_login">Logging in…</string>
 
-    <string name="label_name">Name:</string>
-    <string name="label_email">Email address:</string>
-    <string name="label_password">Password:</string>
-    <string name="label_password_confirm">Retype password:</string>
+    <string name="label_name">Name</string>
+    <string name="label_email">Enter Email</string>
+    <string name="label_password">Enter Password</string>
+    <string name="label_password_confirm">Retype password</string>
 
     <!-- button labels -->
     <string name="button_register">Register</string>

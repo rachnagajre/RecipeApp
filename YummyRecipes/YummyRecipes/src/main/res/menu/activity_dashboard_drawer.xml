@@ -19,10 +19,6 @@
     <item android:title="About">
         <menu>
             <item
-                android:id="@+id/aboutButton"
-                android:icon="@drawable/ic_action_share"
-                android:title="About" />
-            <item
                 android:id="@+id/helpButton"
                 android:icon="@drawable/ic_menu_send"
                 android:title="Help" />

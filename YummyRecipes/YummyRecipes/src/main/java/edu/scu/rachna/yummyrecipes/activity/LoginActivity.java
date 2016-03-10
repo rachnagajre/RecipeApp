@@ -1,6 +1,5 @@
 package edu.scu.rachna.yummyrecipes.activity;
 
-import edu.scu.rachna.yummyrecipes.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,7 +17,7 @@ import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 
-
+import edu.scu.rachna.yummyrecipes.R;
 import edu.scu.rachna.yummyrecipes.data.Default;
 import edu.scu.rachna.yummyrecipes.data.LoadingCallback;
 import edu.scu.rachna.yummyrecipes.data.Validator;
@@ -106,9 +105,6 @@ public class LoginActivity extends Activity
         };
     }
 
-
-
-
     public boolean isLoginValuesValid( CharSequence email, CharSequence password )
     {
         return Validator.isEmailValid(this, email) && Validator.isPasswordValid( this, password );
@@ -139,8 +135,6 @@ public class LoginActivity extends Activity
         dashboardIntent.putExtras(bundle);
         startActivity(dashboardIntent);
     }
-
-
 
     @Override
     protected void onActivityResult( int requestCode, int resultCode, Intent data )

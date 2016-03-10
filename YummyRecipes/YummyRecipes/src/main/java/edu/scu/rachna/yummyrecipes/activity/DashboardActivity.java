@@ -14,10 +14,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
+import com.backendless.BackendlessUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,12 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
 
     private List<Recipe> recipesList = new ArrayList<>();
 
+    private BackendlessUser loggedInUser;
+
+    private TextView nameField;
+
+    private TextView emailField;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +67,13 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View navigationHeader = (View) navigationView.getHeaderView(0);
+        nameField = (TextView) navigationHeader.findViewById(R.id.nameField);
+        emailField = (TextView) navigationHeader.findViewById(R.id.emailField);
+        loggedInUser = Backendless.UserService.CurrentUser();
+        nameField.setText(loggedInUser.getProperty("name").toString());
+        emailField.setText(loggedInUser.getEmail());
 
         initializeRecipesList();
 

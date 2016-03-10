@@ -128,11 +128,6 @@ public class LoginActivity extends Activity
 
     private void startDashboardActivity(BackendlessUser user) {
         Intent dashboardIntent = new Intent(this, DashboardActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("objectId", user.getObjectId());
-        bundle.putString("emailId", user.getEmail());
-        bundle.putString("userId", user.getUserId());
-        dashboardIntent.putExtras(bundle);
         startActivity(dashboardIntent);
     }
 

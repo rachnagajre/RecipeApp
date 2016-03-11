@@ -137,16 +137,16 @@
         android:text="@string/button_login_facebook"
         android:textColor="@android:color/white" />
 
-    <Button
-        android:id="@+id/loginTwitterButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/loginFacebookButton"
-        android:layout_marginBottom="@dimen/view_vertical_margin"
-        android:layout_marginTop="@dimen/view_vertical_margin"
-        android:background="@android:color/holo_blue_light"
-        android:ems="12"
-        android:text="@string/button_login_twitter"
-        android:textColor="@android:color/white" />
+    <!--<Button-->
+        <!--android:id="@+id/loginTwitterButton"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/loginFacebookButton"-->
+        <!--android:layout_marginBottom="@dimen/view_vertical_margin"-->
+        <!--android:layout_marginTop="@dimen/view_vertical_margin"-->
+        <!--android:background="@android:color/holo_blue_light"-->
+        <!--android:ems="12"-->
+        <!--android:text="@string/button_login_twitter"-->
+        <!--android:textColor="@android:color/white" />-->
 </LinearLayout>
 </ScrollView>

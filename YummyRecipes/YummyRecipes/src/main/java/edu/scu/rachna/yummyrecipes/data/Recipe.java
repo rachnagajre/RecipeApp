@@ -134,7 +134,7 @@ public class Recipe implements Serializable
 
     public static void findByIdAsync( String id, AsyncCallback<Recipe> callback )
     {
-        Backendless.Data.of( Recipe.class ).findById( id, callback );
+        Backendless.Data.of( Recipe.class ).findById( id, 1, callback );
     }
 
     public static Recipe findFirst()

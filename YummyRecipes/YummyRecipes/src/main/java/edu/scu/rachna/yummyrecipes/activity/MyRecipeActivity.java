@@ -147,7 +147,7 @@ public class MyRecipeActivity extends AppCompatActivity implements NavigationVie
         String whereclause = "ownerId='" + Backendless.UserService.CurrentUser().getObjectId()+"'";
         query.setWhereClause(whereclause);
         Recipe.getRecipesbySearch(query,
-                new LoadingCallback<BackendlessCollection<Recipe>>(this, "Getting Recipes", true) {
+                new LoadingCallback<BackendlessCollection<Recipe>>(this, "Getting My Recipes", true) {
                     @Override
                     public void handleResponse(BackendlessCollection<Recipe> loadedrecipes) {
                         mBackendlessCollection = loadedrecipes;

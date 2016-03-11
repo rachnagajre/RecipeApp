@@ -59,13 +59,7 @@ public class RecipeDetailActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        recipeName = (TextView) findViewById(R.id.recipeName);
-        prepTime = (TextView)findViewById(R.id.prepTime);
-        serves = (TextView)findViewById(R.id.serves);
-        ingredients = (TextView) findViewById(R.id.recipeIngredients);
-        recipeSteps = (TextView) findViewById(R.id.recipeMethod);
-        recipeImage = (ImageView) findViewById(R.id.recipeImage);
-        likes = (TextView) findViewById(R.id.likesDisplay);
+
 
         Backendless.initApp(this, Default.APPLICATION_ID, Default.ANDROID_SECRET_KEY,
                 Default.VERSION);
@@ -75,13 +69,22 @@ public class RecipeDetailActivity extends BaseActivity {
         Recipe.findByIdAsync(id, new LoadingCallback<Recipe>(this, "Getting Recipe", true) {
             @Override
             public void handleResponse(Recipe loadedrecipe) {
+                recipeName = (TextView) findViewById(R.id.recipeName);
+                prepTime = (TextView)findViewById(R.id.prepTime);
+                serves = (TextView)findViewById(R.id.serves);
+                ingredients = (TextView) findViewById(R.id.recipeIngredients);
+                recipeSteps = (TextView) findViewById(R.id.recipeMethod);
+                recipeImage = (ImageView) findViewById(R.id.recipeImage);
+                likes = (TextView) findViewById(R.id.likesDisplay);
+                ActionBar actionBar = getSupportActionBar();
+
                 recipeName.setText(loadedrecipe.getRecipeName());
 
-                ActionBar actionBar = getSupportActionBar();
+
                 actionBar.setTitle(loadedrecipe.getRecipeName());
 
-                prepTime.setText(loadedrecipe.getPrepTime());
-                serves.setText(loadedrecipe.getServes());
+                prepTime.setText(String.valueOf(loadedrecipe.getTime()));
+                serves.setText(String.valueOf(loadedrecipe.getServes()));
                 ingredients.setText(loadedrecipe.getIngredients());
                 recipeSteps.setText(loadedrecipe.getDirections());
                 Picasso.with(getApplicationContext()).load(loadedrecipe.getImage()).fit().into(recipeImage);
@@ -96,7 +99,7 @@ public class RecipeDetailActivity extends BaseActivity {
         addNewCommentToRecipeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // toast("Add a new comment clicked!!!");
+                // toast("Add a new comment clicked!!!");
                 Intent addNewCommentToRecipeButtonIntent = new Intent(RecipeDetailActivity.this, AddCommentActivity.class);
                 //Pass current selected Recipe object or recipeId into intent
                 addNewCommentToRecipeButtonIntent.putExtra("recipeId", id);
@@ -194,11 +197,11 @@ public class RecipeDetailActivity extends BaseActivity {
 
                 StringBuilder sb = new StringBuilder();
                 sb.append("Recipe Name : ")
-                  .append(loadedRecipe.getRecipeName()).append("\n")
-                  .append("Recipe Ingredients : ")
-                  .append(loadedRecipe.getIngredients()).append("\n")
-                  .append("Recipe Method : ")
-                  .append(loadedRecipe.getDirections()).append("\n");
+                        .append(loadedRecipe.getRecipeName()).append("\n")
+                        .append("Recipe Ingredients : ")
+                        .append(loadedRecipe.getIngredients()).append("\n")
+                        .append("Recipe Method : ")
+                        .append(loadedRecipe.getDirections()).append("\n");
 
                 PackageManager pm = getPackageManager();
                 Intent sendIntent = new Intent(Intent.ACTION_SEND);

@@ -11,21 +11,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
+import com.backendless.BackendlessCollection;
 import com.backendless.BackendlessUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.scu.rachna.yummyrecipes.R;
+import edu.scu.rachna.yummyrecipes.adapter.DashboardRecipesAdapter;
 import edu.scu.rachna.yummyrecipes.data.DefaultCallback;
+import edu.scu.rachna.yummyrecipes.data.LoadingCallback;
 import edu.scu.rachna.yummyrecipes.data.Recipe;
 
-public class MyRecipeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MyRecipeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        AdapterView.OnItemClickListener {
 
     private FloatingActionButton addNewRecipeButton;
 
@@ -38,6 +43,12 @@ public class MyRecipeActivity extends AppCompatActivity implements NavigationVie
     private TextView nameField;
 
     private TextView emailField;
+
+    private BackendlessCollection<Recipe> mBackendlessCollection;
+
+    private DashboardRecipesAdapter adapter;
+
+    private List<Recipe> recipesList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +81,12 @@ public class MyRecipeActivity extends AppCompatActivity implements NavigationVie
             }
         });
 
+        initializeMyRecipesList();
+
+        myRecipesGridView = (GridView) findViewById(R.id.myRecipesGridView);
+        adapter=new DashboardRecipesAdapter(this, recipesList);
+        myRecipesGridView.setAdapter(adapter);
+        myRecipesGridView.setOnItemClickListener(this);
     }
 
     private void navigateToAddNewRecipe() {
@@ -124,4 +141,28 @@ public class MyRecipeActivity extends AppCompatActivity implements NavigationVie
         return true;
     }
 
+    private void initializeMyRecipesList() {
+        Recipe.getAllRecipes(
+                new LoadingCallback<BackendlessCollection<Recipe>>(this, "Getting Recipes", true) {
+                    @Override
+                    public void handleResponse(BackendlessCollection<Recipe> loadedrecipes) {
+                        mBackendlessCollection = loadedrecipes;
+
+                        convertToList(loadedrecipes);
+
+                        super.handleResponse(loadedrecipes);
+                    }
+                });
+
+    }
+    private void convertToList( BackendlessCollection<Recipe> nextPage )
+    {
+        recipesList.addAll(nextPage.getCurrentPage());
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+    }
 }

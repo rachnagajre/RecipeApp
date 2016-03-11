@@ -19,13 +19,13 @@ public class Recipe implements Serializable
     private String ownerId;
     private BackendlessUser creator;
     private String recipeName;
-    private String prepTime;
-    private String serves;
     private String ingredients;
     private String directions;
     private String image;
     private int likes;
-    private List<String> comments;
+    private int time;
+    private int serves;
+    private List<Comment> comments;
 
     public Recipe() {}
 
@@ -39,22 +39,6 @@ public class Recipe implements Serializable
         this.recipeName = recipeName;
     }
 
-    public String getPrepTime() {
-        return prepTime;
-    }
-
-    public void setPrepTime(String prepTime) {
-        this.prepTime = prepTime;
-    }
-
-    public String getServes() {
-        return serves;
-    }
-
-    public void setServes(String serves) {
-        this.serves = serves;
-    }
-
     public void setIngredients( String ingredients) {this.ingredients=ingredients;}
 
     public String getIngredients(){return ingredients;}
@@ -63,12 +47,16 @@ public class Recipe implements Serializable
 
     public String getDirections(){return directions;}
 
+    public void setComments(List<Comment> comments){this.comments=comments;}
+
+    public List<Comment> getComments(){return comments;}
+
     public Date getCreated()
     {
         return created;
     }
 
-    public void setCreated(Date created){this.created=created;}
+    public void setCreated(Date created) {this.created=created;}
 
     public String getObjectId()
     {
@@ -89,7 +77,7 @@ public class Recipe implements Serializable
         return ownerId;
     }
 
-    public void setOwnerId(String ownerId){this.ownerId=ownerId;}
+    public void setOwnerId(String ownerId) {this.ownerId=ownerId;}
 
     public BackendlessUser getCreator()
     {
@@ -109,9 +97,13 @@ public class Recipe implements Serializable
 
     public int getLikes(){return likes;}
 
-    public void setComments(List<String> comments){this.comments=comments;}
+    public void setTime(int time) {this.time=time;}
 
-    public List<String> getComments(){return comments;}
+    public int getTime() {return time;}
+
+    public void setServes(int serves) {this.serves=serves;}
+
+    public int getServes() {return serves;}
 
     public Recipe save()
     {

@@ -30,6 +30,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -38,6 +39,7 @@ import edu.scu.rachna.yummyrecipes.adapter.CommentRowData;
 import edu.scu.rachna.yummyrecipes.adapter.CustomCommentsAdapter;
 import edu.scu.rachna.yummyrecipes.adapter.Helper;
 import edu.scu.rachna.yummyrecipes.data.Comment;
+import edu.scu.rachna.yummyrecipes.data.CommentComparator;
 import edu.scu.rachna.yummyrecipes.data.Default;
 import edu.scu.rachna.yummyrecipes.data.DialogHelper;
 import edu.scu.rachna.yummyrecipes.data.LoadingCallback;
@@ -129,6 +131,7 @@ public class RecipeDetailActivity extends BaseActivity implements AdapterView.On
     public List<CommentRowData> convertCommentList(List<Comment> commentsList) {
         if(CollectionUtils.isNotEmpty(commentsList)) {
             List<CommentRowData> returnList = new ArrayList<CommentRowData>();
+            Collections.sort(commentsList, Collections.reverseOrder(new CommentComparator()));
             for(Comment c : commentsList) {
                 CommentRowData r = new CommentRowData(c.getComment());
                 returnList.add(r);

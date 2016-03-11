@@ -141,6 +141,8 @@ public class RecipeDetailActivity extends BaseActivity {
                 break;
             case R.id.action_mode_close_button:
                 this.finish();
+                Intent dashboardintent = new Intent(RecipeDetailActivity.this,DashboardActivity.class);
+                startActivity(dashboardintent);
                 break;
             case R.id.action_like:
 

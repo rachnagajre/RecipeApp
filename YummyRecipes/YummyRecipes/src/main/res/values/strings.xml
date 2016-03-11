@@ -69,7 +69,7 @@
     <string name="button_submit">Submit</string>
 
     <string name="activity_registration">Yummy Recipe Registration</string>
-    <string name="activity_login">Yummy Recipe Login</string>
+    <string name="activity_login">Yummy Recipe</string>
     <string name="divider_or">OR</string>
     <string name="register_prompt">Do not have an account? Register now</string>
     <string name="register_link">Register</string>

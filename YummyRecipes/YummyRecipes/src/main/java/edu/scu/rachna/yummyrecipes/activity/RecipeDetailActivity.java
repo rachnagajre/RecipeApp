@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.backendless.Backendless;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import edu.scu.rachna.yummyrecipes.R;
+import edu.scu.rachna.yummyrecipes.adapter.CustomCommentsAdapter;
 import edu.scu.rachna.yummyrecipes.data.Default;
 import edu.scu.rachna.yummyrecipes.data.DialogHelper;
 import edu.scu.rachna.yummyrecipes.data.LoadingCallback;
@@ -51,6 +53,9 @@ public class RecipeDetailActivity extends BaseActivity implements AdapterView.On
     private TextView recipeSteps;
     private ImageView recipeImage;
     private TextView likes;
+    private ListView commentsListView;
+
+    private CustomCommentsAdapter commentsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +67,8 @@ public class RecipeDetailActivity extends BaseActivity implements AdapterView.On
 
         Backendless.initApp(this, Default.APPLICATION_ID, Default.ANDROID_SECRET_KEY,
                 Default.VERSION);
+
+        commentsListView = (ListView) findViewById(R.id.commentsList);
 
         id = getIntent().getStringExtra("recipeId");
         Recipe.findByIdAsync(id, new LoadingCallback<Recipe>(this, "Getting Recipe", true) {
@@ -87,6 +94,14 @@ public class RecipeDetailActivity extends BaseActivity implements AdapterView.On
                 Picasso.with(getApplicationContext()).load(loadedrecipe.getImage()).fit().into(recipeImage);
                 likes.setText(String.valueOf(loadedrecipe.getLikes()));
 
+                if(commentsAdapter == null) {
+                    commentsAdapter = new CustomCommentsAdapter(RecipeDetailActivity.this, R.layout.comment_list_item, loadedrecipe.getComments());
+                } else {
+                    commentsAdapter.updateCommentsList(loadedrecipe.getComments());
+                }
+                commentsListView.setAdapter(commentsAdapter);
+                commentsListView.setOnItemClickListener(RecipeDetailActivity.this);
+
                 super.handleResponse(loadedrecipe);
             }
         });
@@ -109,20 +124,32 @@ public class RecipeDetailActivity extends BaseActivity implements AdapterView.On
         super.onStart();
 
         /**
-         *  TODO : Fetch recipe details from backend less
+         *  Fetch recipe details from backend less
          *  This is needed because everytime this activity might be started or resumed there might be changed data
-         *  (e.g. Total number of likes or newly added comments) that need to be updated on RecipeDetail page
+         *  (e.g. Newly added comments might need refresh for listview) that need to be updated on RecipeDetail page
          */
+//        Recipe.findByIdAsync(id, new LoadingCallback<Recipe>(this, "Getting Recipe", true) {
+//            @Override
+//            public void handleResponse(Recipe loadedrecipe) {
+//                commentsAdapter.updateCommentsList(loadedrecipe.getComments());
+//            }
+//        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
         /**
-         *  TODO : Fetch recipe details from backend less
+         *  Fetch recipe details from backend less
          *  This is needed because everytime this activity might be started or resumed there might be changed data
-         *  (e.g. Total number of likes or newly added comments) that need to be updated on RecipeDetail page
+         *  (e.g. Newly added comments might need refresh for listview) that need to be updated on RecipeDetail page
          */
+//        Recipe.findByIdAsync(id, new LoadingCallback<Recipe>(this, "Getting Recipe", true) {
+//            @Override
+//            public void handleResponse(Recipe loadedrecipe) {
+//                commentsAdapter.updateCommentsList(loadedrecipe.getComments());
+//            }
+//        });
     }
 
     @Override

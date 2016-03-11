@@ -17,7 +17,7 @@ import edu.scu.rachna.yummyrecipes.data.Comment;
  */
 public class CustomCommentsAdapter extends BaseAdapter {
 
-    private final List<Comment> commentsList;
+    private List<Comment> commentsList;
 
     private Context context;
 

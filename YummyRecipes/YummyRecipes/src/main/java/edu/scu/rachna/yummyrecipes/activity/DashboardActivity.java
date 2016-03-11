@@ -103,12 +103,20 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
     public void onStart() {
         super.onStart();
         initializeRecipesList();
+        recipesGridView = (GridView) findViewById(R.id.recipesGridView);
+        adapter = new DashboardRecipesAdapter(this, recipesList);
+        recipesGridView.setAdapter(adapter);
+        recipesGridView.setOnItemClickListener(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         initializeRecipesList();
+        recipesGridView = (GridView) findViewById(R.id.recipesGridView);
+        adapter = new DashboardRecipesAdapter(this, recipesList);
+        recipesGridView.setAdapter(adapter);
+        recipesGridView.setOnItemClickListener(this);
     }
 
     private void initializeRecipesList() {
@@ -139,7 +147,7 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //TODO : Go to Recipe Details page and pass the required recipeItemId in intent
+        //Go to Recipe Details page and pass the required recipeItemId in intent
         final Recipe recipe = recipesList.get(position);
         navigateToRecipeDetails(recipe);
     }

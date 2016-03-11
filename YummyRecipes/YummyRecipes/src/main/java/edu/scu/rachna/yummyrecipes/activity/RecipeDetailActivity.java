@@ -45,6 +45,8 @@ public class RecipeDetailActivity extends BaseActivity {
 
     private TextView ingredients;
     private TextView recipeName;
+    private TextView prepTime;
+    private TextView serves;
     private TextView recipeSteps;
     private ImageView recipeImage;
     private TextView likes;
@@ -58,6 +60,8 @@ public class RecipeDetailActivity extends BaseActivity {
         setSupportActionBar(toolbar);
 
         recipeName = (TextView) findViewById(R.id.recipeName);
+        prepTime = (TextView)findViewById(R.id.prepTime);
+        serves = (TextView)findViewById(R.id.serves);
         ingredients = (TextView) findViewById(R.id.recipeIngredients);
         recipeSteps = (TextView) findViewById(R.id.recipeMethod);
         recipeImage = (ImageView) findViewById(R.id.recipeImage);
@@ -76,6 +80,8 @@ public class RecipeDetailActivity extends BaseActivity {
                 ActionBar actionBar = getSupportActionBar();
                 actionBar.setTitle(loadedrecipe.getRecipeName());
 
+                prepTime.setText(loadedrecipe.getPrepTime());
+                serves.setText(loadedrecipe.getServes());
                 ingredients.setText(loadedrecipe.getIngredients());
                 recipeSteps.setText(loadedrecipe.getDirections());
                 Picasso.with(getApplicationContext()).load(loadedrecipe.getImage()).fit().into(recipeImage);

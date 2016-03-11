@@ -43,6 +43,28 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/preparationTime"
+            android:ems="10"
+            android:id="@+id/prepTime"
+            android:layout_below="@+id/recipeName"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/serves"
+            android:ems="10"
+            android:id="@+id/serves"
+            android:layout_below="@+id/prepTime"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -53,7 +75,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:text="@string/ingredients"
-            android:layout_below="@+id/recipeName"
+            android:layout_below="@+id/serves"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
 

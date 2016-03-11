@@ -34,6 +34,8 @@ public class AddRecipeActivity extends AppCompatActivity {
     private Button takePictureButton;
     private ImageView capturedImage;
     private EditText recipeName;
+    private EditText prepTime;
+    private EditText serves;
     private EditText recipeIngredients;
     private EditText recipeMethod;
     private String imagePath;
@@ -49,6 +51,8 @@ public class AddRecipeActivity extends AppCompatActivity {
         takePictureButton = (Button) findViewById(R.id.takePictureButton);
         capturedImage = (ImageView) findViewById(R.id.recipeImage);
         recipeName = (EditText) findViewById(R.id.recipeName);
+        prepTime = (EditText)findViewById(R.id.prepTime);
+        serves = (EditText)findViewById(R.id.serves);
         recipeIngredients = (EditText) findViewById(R.id.recipeIngredients);
         recipeMethod = (EditText) findViewById(R.id.recipeMethod);
 
@@ -130,6 +134,8 @@ public class AddRecipeActivity extends AppCompatActivity {
 
     private void saveRecipe() {
         TextView getrname = (TextView) findViewById(R.id.recipeName);
+        TextView getprepTime = (TextView) findViewById(R.id.prepTime);
+        TextView getserves = (TextView) findViewById(R.id.serves);
         TextView getingredients = (TextView) findViewById(R.id.recipeIngredients);
         TextView getsteps = (TextView) findViewById(R.id.recipeMethod);
 
@@ -138,6 +144,9 @@ public class AddRecipeActivity extends AppCompatActivity {
         recipe.setDirections(getsteps.getText().toString());
         recipe.setIngredients(getingredients.getText().toString());
         recipe.setRecipeName(getrname.getText().toString());
+        recipe.setPrepTime(getprepTime.getText().toString());
+        recipe.setServes(getserves.getText().toString());
+
         recipe.setLikes(0);
         if (imagePath != null)
         {

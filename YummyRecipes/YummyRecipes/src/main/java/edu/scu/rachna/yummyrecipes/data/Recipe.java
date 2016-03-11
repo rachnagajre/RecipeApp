@@ -19,6 +19,8 @@ public class Recipe implements Serializable
     private String ownerId;
     private BackendlessUser creator;
     private String recipeName;
+    private String prepTime;
+    private String serves;
     private String ingredients;
     private String directions;
     private String image;
@@ -35,6 +37,22 @@ public class Recipe implements Serializable
     public void setRecipeName( String recipeName )
     {
         this.recipeName = recipeName;
+    }
+
+    public String getPrepTime() {
+        return prepTime;
+    }
+
+    public void setPrepTime(String prepTime) {
+        this.prepTime = prepTime;
+    }
+
+    public String getServes() {
+        return serves;
+    }
+
+    public void setServes(String serves) {
+        this.serves = serves;
     }
 
     public void setIngredients( String ingredients) {this.ingredients=ingredients;}

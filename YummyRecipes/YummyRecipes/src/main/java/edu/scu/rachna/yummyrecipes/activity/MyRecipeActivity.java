@@ -156,7 +156,6 @@ public class MyRecipeActivity extends AppCompatActivity implements NavigationVie
         initializeMyRecipesList();
     }
 
-
     private void initializeMyRecipesList() {
         BackendlessDataQuery query = new BackendlessDataQuery();
         String whereclause = "ownerId='" + Backendless.UserService.CurrentUser().getObjectId()+"' and likes>-1";

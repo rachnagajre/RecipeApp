@@ -134,6 +134,7 @@ public class Recipe implements Serializable
 
     public static void findByIdAsync( String id, AsyncCallback<Recipe> callback )
     {
+        //depth search for relations
         Backendless.Data.of( Recipe.class ).findById( id, 1, callback );
     }
 

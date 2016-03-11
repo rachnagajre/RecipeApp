@@ -125,7 +125,6 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
                         super.handleResponse(loadedrecipes);
                     }
                 });
-
     }
 
     private void navigateToAddNewRecipe() {

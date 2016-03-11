@@ -15,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,6 +24,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
+import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.squareup.picasso.Picasso;
 
@@ -63,6 +66,8 @@ public class RecipeDetailActivity extends BaseActivity implements AdapterView.On
     private ListView commentsListView;
 
     private CustomCommentsAdapter commentsAdapter;
+
+    private BackendlessUser loggedInUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +133,27 @@ public class RecipeDetailActivity extends BaseActivity implements AdapterView.On
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        String recipeId = getIntent().getStringExtra("recipeId");
+        Recipe.findByIdAsync(recipeId, new LoadingCallback<Recipe>(this, "Getting Recipe", false) {
+            @Override
+            public void handleResponse(Recipe currentRecipe) {
+                loggedInUser = Backendless.UserService.CurrentUser();
+                //Set delete menu item visible only if recipe belongs to the user
+                MenuItem removeMenuItem = menu.findItem(R.id.action_delete);
+                if(currentRecipe != null && loggedInUser!= null && loggedInUser.getObjectId().equals(currentRecipe.getCreator().getObjectId())) {
+                    removeMenuItem.setVisible(true);
+                } else {
+                    removeMenuItem.setVisible(false);
+                }
+                progressDialog.hide();
+            }
+        });
+        return true;
+    }
+
     public List<CommentRowData> convertCommentList(List<Comment> commentsList) {
         if(CollectionUtils.isNotEmpty(commentsList)) {
             List<CommentRowData> returnList = new ArrayList<CommentRowData>();
@@ -150,7 +176,24 @@ public class RecipeDetailActivity extends BaseActivity implements AdapterView.On
                 handleShareClick();
                 break;
             case R.id.action_delete :
-                toast("Delete recipe Action ...");
+                Recipe.findByIdAsync(id, new LoadingCallback<Recipe>(this, "Deleting recipe", false) {
+                    @Override
+                    public void handleResponse(Recipe currentRecipe) {
+                        progressDialog.hide();
+                        Backendless.Persistence.of(Recipe.class).remove(currentRecipe, new AsyncCallback<Long>() {
+                            @Override
+                            public void handleResponse(Long aLong) {
+                                progressDialog.hide();
+                            }
+                            @Override
+                            public void handleFault(BackendlessFault backendlessFault) {
+                                toast("Can not delete current recipe.");
+                            }
+                        });
+                    }
+                });
+                finish();
+                startActivity(new Intent(this, DashboardActivity.class));
                 break;
             case R.id.action_mode_close_button:
                 this.finish();

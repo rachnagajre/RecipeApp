@@ -20,6 +20,7 @@ import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
 import com.backendless.BackendlessUser;
 import com.backendless.persistence.BackendlessDataQuery;
+import com.backendless.persistence.QueryOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,10 +143,26 @@ public class MyRecipeActivity extends AppCompatActivity implements NavigationVie
         return true;
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        initializeMyRecipesList();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initializeMyRecipesList();
+    }
+
     private void initializeMyRecipesList() {
         BackendlessDataQuery query = new BackendlessDataQuery();
-        String whereclause = "ownerId='" + Backendless.UserService.CurrentUser().getObjectId()+"'";
+        String whereclause = "ownerId='" + Backendless.UserService.CurrentUser().getObjectId()+"' and likes>-1";
         query.setWhereClause(whereclause);
+        QueryOptions options = new QueryOptions();
+        options.addSortByOption("likes desc");
+        query.setQueryOptions(options);
         Recipe.getRecipesbySearch(query,
                 new LoadingCallback<BackendlessCollection<Recipe>>(this, "Getting My Recipes", true) {
                     @Override
@@ -161,6 +178,7 @@ public class MyRecipeActivity extends AppCompatActivity implements NavigationVie
     }
     private void convertToList( BackendlessCollection<Recipe> nextPage )
     {
+        recipesList.clear();
         recipesList.addAll(nextPage.getCurrentPage());
         adapter.notifyDataSetChanged();
     }

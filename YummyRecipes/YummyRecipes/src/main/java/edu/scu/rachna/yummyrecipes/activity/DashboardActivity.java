@@ -99,6 +99,18 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        initializeRecipesList();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initializeRecipesList();
+    }
+
     private void initializeRecipesList() {
         BackendlessDataQuery query = new BackendlessDataQuery();
         String whereclause = "likes>-1";
@@ -118,7 +130,6 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
                         super.handleResponse(loadedrecipes);
                     }
                 });
-
     }
 
     private void navigateToAddNewRecipe() {
@@ -183,6 +194,7 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
 
     private void convertToList( BackendlessCollection<Recipe> nextPage )
     {
+        recipesList.clear();
         recipesList.addAll(nextPage.getCurrentPage());
         adapter.notifyDataSetChanged();
     }

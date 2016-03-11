@@ -30,7 +30,7 @@ import edu.scu.rachna.yummyrecipes.data.Recipe;
  */
 public class DashboardRecipesAdapter extends BaseAdapter{
 
-    private final List<Recipe> recipes;
+    private List<Recipe> recipes;
     private Context context;
 
     public DashboardRecipesAdapter(Context context, List<Recipe> recipes) {

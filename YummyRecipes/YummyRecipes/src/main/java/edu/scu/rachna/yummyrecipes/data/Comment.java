@@ -1,7 +1,5 @@
 package edu.scu.rachna.yummyrecipes.data;
 
-import com.backendless.BackendlessUser;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -13,6 +11,20 @@ public class Comment implements Serializable {
     private String objectId;
     private Date updated;
     private String comment;
+
+    public Comment() {
+    }
+
+    public Comment(Date created, String objectId, Date updated, String comment) {
+        this.created = created;
+        this.objectId = objectId;
+        this.updated = updated;
+        this.comment = comment;
+    }
+
+    public Comment(String comment) {
+        this.comment = comment;
+    }
 
     public Date getCreated()
     {

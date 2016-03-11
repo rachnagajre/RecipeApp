@@ -52,10 +52,10 @@ public class LoginActivity extends Activity
         loginButton.setOnClickListener( createLoginButtonListener() );
 
         loginFacebookButton = (Button) findViewById(R.id.loginFacebookButton);
-        loginTwitterButton = (Button) findViewById(R.id.loginTwitterButton);
+        //loginTwitterButton = (Button) findViewById(R.id.loginTwitterButton);
 
         loginFacebookButton.setOnClickListener(createLoginFacebookButtonListener());
-        loginTwitterButton.setOnClickListener(createLoginTwitterButtonListener());
+        //loginTwitterButton.setOnClickListener(createLoginTwitterButtonListener());
 
         makeRegistrationLink();
     }

@@ -10,18 +10,17 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.scu.rachna.yummyrecipes.R;
-import edu.scu.rachna.yummyrecipes.data.Comment;
 
 /**
  * Created by Rachna on 3/10/2016.
  */
 public class CustomCommentsAdapter extends BaseAdapter {
 
-    private final List<Comment> commentsList;
+    private List<CommentRowData> commentsList;
 
     private Context context;
 
-    public CustomCommentsAdapter(Context context, int resource, List<Comment> comments) {
+    public CustomCommentsAdapter(Context context, int resource, List<CommentRowData> comments) {
         super();
         this.commentsList = comments;
         this.context = context;
@@ -42,7 +41,7 @@ public class CustomCommentsAdapter extends BaseAdapter {
         return position;
     }
 
-    public void updateCommentsList(List<Comment> updatedList) {
+    public void updateCommentsList(List<CommentRowData> updatedList) {
         this.commentsList.clear();
         this.commentsList.addAll(updatedList);
         this.notifyDataSetChanged();
@@ -56,7 +55,7 @@ public class CustomCommentsAdapter extends BaseAdapter {
 
         if(row == null) {
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            row = inflater.inflate(R.layout.comment_list_item, null);
+            row = inflater.inflate(R.layout.comment_list_item, parent, false);
 
             holder = new ScrapViewHolder();
             holder.commentContent = (TextView) row.findViewById(R.id.commentContent);

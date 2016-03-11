@@ -15,22 +15,34 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
+import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import edu.scu.rachna.yummyrecipes.R;
+import edu.scu.rachna.yummyrecipes.adapter.CommentRowData;
+import edu.scu.rachna.yummyrecipes.adapter.CustomCommentsAdapter;
+import edu.scu.rachna.yummyrecipes.adapter.Helper;
+import edu.scu.rachna.yummyrecipes.data.Comment;
+import edu.scu.rachna.yummyrecipes.data.CommentComparator;
 import edu.scu.rachna.yummyrecipes.data.Default;
 import edu.scu.rachna.yummyrecipes.data.DialogHelper;
 import edu.scu.rachna.yummyrecipes.data.LoadingCallback;
@@ -51,6 +63,11 @@ public class RecipeDetailActivity extends BaseActivity implements AdapterView.On
     private TextView recipeSteps;
     private ImageView recipeImage;
     private TextView likes;
+    private ListView commentsListView;
+
+    private CustomCommentsAdapter commentsAdapter;
+
+    private BackendlessUser loggedInUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +104,17 @@ public class RecipeDetailActivity extends BaseActivity implements AdapterView.On
                 Picasso.with(getApplicationContext()).load(loadedrecipe.getImage()).fit().into(recipeImage);
                 likes.setText(String.valueOf(loadedrecipe.getLikes()));
 
+
+                commentsListView = (ListView) findViewById(R.id.commentsList);
+                if(commentsAdapter == null) {
+                    commentsAdapter = new CustomCommentsAdapter(getApplicationContext(), R.layout.comment_list_item, convertCommentList(loadedrecipe.getComments()));
+                } else {
+                    commentsAdapter.updateCommentsList(convertCommentList(loadedrecipe.getComments()));
+                }
+                commentsListView.setVisibility(View.VISIBLE);
+                commentsListView.setAdapter(commentsAdapter);
+                commentsListView.setOnItemClickListener(RecipeDetailActivity.this);
+                Helper.getListViewSize(commentsListView);
                 super.handleResponse(loadedrecipe);
             }
         });
@@ -100,29 +128,44 @@ public class RecipeDetailActivity extends BaseActivity implements AdapterView.On
                 //Pass current selected Recipe object or recipeId into intent
                 addNewCommentToRecipeButtonIntent.putExtra("recipeId", id);
                 startActivity(addNewCommentToRecipeButtonIntent);
+                finish();
             }
         });
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        /**
-         *  TODO : Fetch recipe details from backend less
-         *  This is needed because everytime this activity might be started or resumed there might be changed data
-         *  (e.g. Total number of likes or newly added comments) that need to be updated on RecipeDetail page
-         */
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        String recipeId = getIntent().getStringExtra("recipeId");
+        Recipe.findByIdAsync(recipeId, new LoadingCallback<Recipe>(this, "Getting Recipe", false) {
+            @Override
+            public void handleResponse(Recipe currentRecipe) {
+                loggedInUser = Backendless.UserService.CurrentUser();
+                //Set delete menu item visible only if recipe belongs to the user
+                MenuItem removeMenuItem = menu.findItem(R.id.action_delete);
+                if(currentRecipe != null && loggedInUser!= null && loggedInUser.getObjectId().equals(currentRecipe.getCreator().getObjectId())) {
+                    removeMenuItem.setVisible(true);
+                } else {
+                    removeMenuItem.setVisible(false);
+                }
+                progressDialog.hide();
+            }
+        });
+        return true;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        /**
-         *  TODO : Fetch recipe details from backend less
-         *  This is needed because everytime this activity might be started or resumed there might be changed data
-         *  (e.g. Total number of likes or newly added comments) that need to be updated on RecipeDetail page
-         */
+    public List<CommentRowData> convertCommentList(List<Comment> commentsList) {
+        if(CollectionUtils.isNotEmpty(commentsList)) {
+            List<CommentRowData> returnList = new ArrayList<CommentRowData>();
+            Collections.sort(commentsList, Collections.reverseOrder(new CommentComparator()));
+            for(Comment c : commentsList) {
+                CommentRowData r = new CommentRowData(c.getComment());
+                returnList.add(r);
+            }
+            return returnList;
+        } else {
+            return new ArrayList<CommentRowData>();
+        }
     }
 
     @Override
@@ -133,7 +176,24 @@ public class RecipeDetailActivity extends BaseActivity implements AdapterView.On
                 handleShareClick();
                 break;
             case R.id.action_delete :
-                toast("Delete recipe Action ...");
+                Recipe.findByIdAsync(id, new LoadingCallback<Recipe>(this, "Deleting recipe", false) {
+                    @Override
+                    public void handleResponse(Recipe currentRecipe) {
+                        progressDialog.hide();
+                        Backendless.Persistence.of(Recipe.class).remove(currentRecipe, new AsyncCallback<Long>() {
+                            @Override
+                            public void handleResponse(Long aLong) {
+                                progressDialog.hide();
+                            }
+                            @Override
+                            public void handleFault(BackendlessFault backendlessFault) {
+                                toast("Can not delete current recipe.");
+                            }
+                        });
+                    }
+                });
+                finish();
+                startActivity(new Intent(this, DashboardActivity.class));
                 break;
             case R.id.action_mode_close_button:
                 this.finish();
@@ -225,7 +285,7 @@ public class RecipeDetailActivity extends BaseActivity implements AdapterView.On
                         emailIntent.setType("message/rfc822");
                         downloadAndAttachImageFromBackendLessAsync(emailIntent, loadedRecipe);
                         emailIntent.setPackage(packageName);
-                    } else if(packageName.contains("com.facebook.katana") || packageName.contains("com.facebook.orca") ||
+                    } else if(packageName.contains("com.facebook.orca") ||
                               packageName.contains("com.whatsapp") || packageName.contains("com.google.android.gm")) {
                         Intent intent = new Intent();
                         intent.setComponent(new ComponentName(packageName, rInfo.activityInfo.name));
@@ -234,15 +294,6 @@ public class RecipeDetailActivity extends BaseActivity implements AdapterView.On
 
                         if(packageName.contains("com.facebook.orca")) {
                             //Facebook Messanger package
-                            intent.putExtra(Intent.EXTRA_TEXT, sb.toString());
-                        } else if(packageName.contains("com.facebook.katana")) {
-                            //Facebook Android application package
-                            /**
-                             *   TODO : Need to use facebook SDK to allow sharing recipe on facebook
-                             *   Facebook does not allow hardcoded text to be posted to facebook posts
-                             *   (even with FB SDK API, it allows only photo/video/url to be posted on FB wall
-                             *    but does not allow text to be posted directly)
-                             */
                             intent.putExtra(Intent.EXTRA_TEXT, sb.toString());
                         } else if(packageName.contains("com.whatsapp") || packageName.contains("com.google.android.gm")) {
                             //Whatsapp or Gmail package name

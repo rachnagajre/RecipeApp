@@ -17,11 +17,12 @@
         completions."
     </string>
     <string name="addRecipeButton">Add Your Recipe</string>
-    <string name="Method">Method</string>
-    <string name="ingredients">Ingredients</string>
-    <string name="recipeName">Recipe Name</string>
-    <string name="preparationTime">Preparation Time</string>
-    <string name="serves">Serves</string>
+    <string name="Method">Method:</string>
+    <string name="ingredients">Ingredients:</string>
+    <string name="recipeName">Recipe Name:</string>
+    <string name="preparationTime">Preparation Time(Minutes):</string>
+    <string name="commentsHeading">Comments:</string>
+    <string name="serves">Serves:</string>
     <string name="takePictureButton">Take Picture</string>
     <string name="saveRecipeButton">Save Recipe</string>
     <string name="likeButton">Like</string>

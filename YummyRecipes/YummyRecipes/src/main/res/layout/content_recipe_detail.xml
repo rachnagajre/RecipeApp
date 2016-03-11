@@ -31,147 +31,131 @@
             android:paddingTop="60dp"
             android:scaleType="fitCenter" />
 
-        <Space
-            android:layout_width="30dp"
-            android:layout_height="30dp" />
-
         <TextView
             android:id="@+id/recipeNameHeading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/recipeImage"
-            android:text="@string/recipeName" />
+            android:text="@string/recipeName"
+            android:textStyle="bold"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/recipeName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentStart="true"
             android:layout_below="@+id/recipeNameHeading"
             android:ems="10"
+            android:paddingLeft="20dp"
             android:inputType="textPersonName"
-            android:text="@string/recipeName" />
-
-        <Space
-            android:layout_width="30dp"
-            android:layout_height="30dp" />
+            />
 
         <TextView
             android:id="@+id/prepTimeHeading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/recipeName"
-            android:text="@string/preparationTime" />
+            android:text="@string/preparationTime"
+            android:textStyle="bold"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/prepTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentStart="true"
+            android:paddingLeft="20dp"
             android:layout_below="@+id/prepTimeHeading"
             android:ems="10"
-            android:text="@string/preparationTime" />
-
-        <Space
-            android:layout_width="30dp"
-            android:layout_height="30dp" />
+            />
 
         <TextView
             android:id="@+id/servesHeading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/prepTime"
-            android:text="@string/serves" />
+            android:text="@string/serves"
+            android:textStyle="bold"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/serves"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentStart="true"
+            android:paddingLeft="20dp"
             android:layout_below="@+id/servesHeading"
             android:ems="10"
-            android:text="@string/serves" />
-
-        <Space
-            android:layout_width="30dp"
-            android:layout_height="30dp" />
+            />
 
         <TextView
             android:id="@+id/recipeIngredientsHeading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/serves"
-            android:text="@string/ingredients" />
+            android:text="@string/ingredients"
+            android:textStyle="bold"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/recipeIngredients"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentStart="true"
+            android:paddingLeft="20dp"
             android:layout_below="@+id/recipeIngredientsHeading"
             android:ems="10"
             android:inputType="textMultiLine"
-            android:text="@string/ingredients" />
-
-        <Space
-            android:layout_width="30dp"
-            android:layout_height="30dp" />
+            />
 
         <TextView
             android:id="@+id/methodHeading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/recipeIngredients"
-            android:text="@string/Method" />
+            android:text="@string/Method"
+            android:textStyle="bold"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/recipeMethod"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentStart="true"
+            android:paddingLeft="20dp"
             android:layout_below="@+id/methodHeading"
             android:ems="10"
             android:inputType="textMultiLine"
-            android:text="@string/Method" />
-
-        <Space
-            android:layout_width="30dp"
-            android:layout_height="30dp" />
+            />
 
         <TextView
             android:id="@+id/likeHeading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/recipeMethod"
-            android:text="@string/likesDisplay" />
+            android:text="@string/likesDisplay"
+            android:textStyle="bold"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/likesDisplay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentStart="true"
+            android:paddingLeft="20dp"
             android:layout_below="@+id/likeHeading"
             android:ems="10"
-            android:inputType="textMultiLine"
-            android:text="@string/likesDisplay" />
+            />
+
+        <TextView
+            android:id="@+id/commentsHeading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/likesDisplay"
+            android:text="@string/commentsHeading"
+            android:textStyle="bold"
+            android:textSize="18sp" />
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/commentsList"
+            android:paddingLeft="20dp" />
 
     </RelativeLayout>
 </ScrollView>

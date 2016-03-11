@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,7 +37,7 @@ import edu.scu.rachna.yummyrecipes.data.LoadingCallback;
 import edu.scu.rachna.yummyrecipes.data.Recipe;
 import edu.scu.rachna.yummyrecipes.task.DownloadUrlAsyncTask;
 
-public class RecipeDetailActivity extends BaseActivity {
+public class RecipeDetailActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
     private static final String TAG = "RecipeDetailActivity";
 
@@ -59,13 +60,10 @@ public class RecipeDetailActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-
         Backendless.initApp(this, Default.APPLICATION_ID, Default.ANDROID_SECRET_KEY,
                 Default.VERSION);
 
         id = getIntent().getStringExtra("recipeId");
-        //Toast.makeText(getApplicationContext(),id,Toast.LENGTH_LONG).show();
         Recipe.findByIdAsync(id, new LoadingCallback<Recipe>(this, "Getting Recipe", true) {
             @Override
             public void handleResponse(Recipe loadedrecipe) {
@@ -79,7 +77,6 @@ public class RecipeDetailActivity extends BaseActivity {
                 ActionBar actionBar = getSupportActionBar();
 
                 recipeName.setText(loadedrecipe.getRecipeName());
-
 
                 actionBar.setTitle(loadedrecipe.getRecipeName());
 
@@ -99,7 +96,6 @@ public class RecipeDetailActivity extends BaseActivity {
         addNewCommentToRecipeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // toast("Add a new comment clicked!!!");
                 Intent addNewCommentToRecipeButtonIntent = new Intent(RecipeDetailActivity.this, AddCommentActivity.class);
                 //Pass current selected Recipe object or recipeId into intent
                 addNewCommentToRecipeButtonIntent.putExtra("recipeId", id);
@@ -200,6 +196,10 @@ public class RecipeDetailActivity extends BaseActivity {
                         .append(loadedRecipe.getRecipeName()).append("\n")
                         .append("Recipe Ingredients : ")
                         .append(loadedRecipe.getIngredients()).append("\n")
+                        .append("Recipe Preparation Time (minutes) : ")
+                        .append(loadedRecipe.getTime()).append("\n")
+                        .append("Recipe Servings : ")
+                        .append(loadedRecipe.getServes()).append("\n")
                         .append("Recipe Method : ")
                         .append(loadedRecipe.getDirections()).append("\n");
 
@@ -223,20 +223,31 @@ public class RecipeDetailActivity extends BaseActivity {
                         emailIntent.setType("message/rfc822");
                         downloadAndAttachImageFromBackendLessAsync(emailIntent, loadedRecipe);
                         emailIntent.setPackage(packageName);
-                    } else if(packageName.contains("facebook") || packageName.contains("com.whatsapp") || packageName.contains("com.google.android.gm")) {
+                    } else if(packageName.contains("com.facebook.katana") || packageName.contains("com.facebook.orca") ||
+                              packageName.contains("com.whatsapp") || packageName.contains("com.google.android.gm")) {
                         Intent intent = new Intent();
                         intent.setComponent(new ComponentName(packageName, rInfo.activityInfo.name));
                         intent.setAction(Intent.ACTION_SEND);
                         intent.setType("text/plain");
 
-                        if(packageName.contains("facebook")) {
-                            //TODO : Need to use facebook SDK to allow sharing recipe on facebook
-                            //Facebook does not allow INTENT.EXTRA_TEXT to be posted to facebook posts
+                        if(packageName.contains("com.facebook.orca")) {
+                            //Facebook Messanger package
+                            intent.putExtra(Intent.EXTRA_TEXT, sb.toString());
+                        } else if(packageName.contains("com.facebook.katana")) {
+                            //Facebook Android application package
+                            /**
+                             *   TODO : Need to use facebook SDK to allow sharing recipe on facebook
+                             *   Facebook does not allow hardcoded text to be posted to facebook posts
+                             *   (even with FB SDK API, it allows only photo/video/url to be posted on FB wall
+                             *    but does not allow text to be posted directly)
+                             */
                             intent.putExtra(Intent.EXTRA_TEXT, sb.toString());
                         } else if(packageName.contains("com.whatsapp") || packageName.contains("com.google.android.gm")) {
+                            //Whatsapp or Gmail package name
                             intent.putExtra(Intent.EXTRA_TEXT, sb.toString());
                             downloadAndAttachImageFromBackendLessAsync(intent, loadedRecipe);
                             if(packageName.contains("com.google.android.gm")) {
+                                //For Gmail, add subject for email also
                                 intent.putExtra(Intent.EXTRA_SUBJECT, "Recipe : " + loadedRecipe.getRecipeName());
                             }
                         }
@@ -279,4 +290,8 @@ public class RecipeDetailActivity extends BaseActivity {
         return Uri.parse(path);
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+    }
 }

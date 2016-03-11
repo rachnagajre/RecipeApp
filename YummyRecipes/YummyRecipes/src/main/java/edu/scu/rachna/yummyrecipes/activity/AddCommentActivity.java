@@ -47,13 +47,14 @@ public class AddCommentActivity extends BaseActivity {
         enterComment = (EditText) findViewById(R.id.enterComment);
         submitCommentButton = (Button) findViewById(R.id.submitCommentButton);
 
-        ActionBar actionBar = getSupportActionBar();
-        /**
-         *  TODO : Recipe Name for which comment is being added should go here
-         *  Recipe id, name or entire recipe object can be passed by intent
-         *  and data should be fetched from intent and Title should be assigned accordingly
-         */
-        actionBar.setTitle("Recipe Name");
+        Recipe.findByIdAsync(id, new LoadingCallback<Recipe>(this, "", true) {
+            @Override
+            public void handleResponse(Recipe loadedRecipe) {
+                ActionBar actionBar = getSupportActionBar();
+                actionBar.setTitle(loadedRecipe.getRecipeName());
+                super.handleResponse(loadedRecipe);
+            }
+        });
 
         submitCommentButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +66,7 @@ public class AddCommentActivity extends BaseActivity {
 
     public void submitComment() {
 
-        Recipe.findByIdAsync(id, new LoadingCallback<Recipe>(this, "Getting Recipe", true) {
+        Recipe.findByIdAsync(id, new LoadingCallback<Recipe>(this, "", true) {
             @Override
             public void handleResponse(Recipe loadedrecipe) {
                 List<Comment> comment;

@@ -143,7 +143,7 @@ public class MyRecipeActivity extends AppCompatActivity implements NavigationVie
 
     private void initializeMyRecipesList() {
         Recipe.getAllRecipes(
-                new LoadingCallback<BackendlessCollection<Recipe>>(this, "Getting Recipes", true) {
+                new LoadingCallback<BackendlessCollection<Recipe>>(this, "Getting My Recipes", true) {
                     @Override
                     public void handleResponse(BackendlessCollection<Recipe> loadedrecipes) {
                         mBackendlessCollection = loadedrecipes;

@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
 import com.backendless.BackendlessUser;
+import com.backendless.persistence.BackendlessDataQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,8 +143,11 @@ public class MyRecipeActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void initializeMyRecipesList() {
-        Recipe.getAllRecipes(
-                new LoadingCallback<BackendlessCollection<Recipe>>(this, "Getting My Recipes", true) {
+        BackendlessDataQuery query = new BackendlessDataQuery();
+        String whereclause = "ownerId='" + Backendless.UserService.CurrentUser().getObjectId()+"'";
+        query.setWhereClause(whereclause);
+        Recipe.getRecipesbySearch(query,
+                new LoadingCallback<BackendlessCollection<Recipe>>(this, "Getting Recipes", true) {
                     @Override
                     public void handleResponse(BackendlessCollection<Recipe> loadedrecipes) {
                         mBackendlessCollection = loadedrecipes;

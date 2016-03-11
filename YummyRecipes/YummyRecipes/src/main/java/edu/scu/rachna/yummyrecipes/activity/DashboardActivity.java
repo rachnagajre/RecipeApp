@@ -20,6 +20,8 @@ import android.widget.Toast;
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
 import com.backendless.BackendlessUser;
+import com.backendless.persistence.BackendlessDataQuery;
+import com.backendless.persistence.QueryOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,16 +95,24 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
     }
 
     private void initializeRecipesList() {
-        Recipe.getAllRecipes(new LoadingCallback<BackendlessCollection<Recipe>>(this, "Getting Recipes", true) {
-            @Override
-            public void handleResponse(BackendlessCollection<Recipe> loadedrecipes) {
-                mBackendlessCollection = loadedrecipes;
+        BackendlessDataQuery query = new BackendlessDataQuery();
+        String whereclause = "likes>-1";
+        query.setWhereClause(whereclause);
+        QueryOptions options = new QueryOptions();
+        options.addSortByOption("likes desc");
+        query.setWhereClause(whereclause);
+        query.setQueryOptions(options);
+        Recipe.getRecipesbySearch(query,
+                new LoadingCallback<BackendlessCollection<Recipe>>(this, "Getting Recipes", true) {
+                    @Override
+                    public void handleResponse(BackendlessCollection<Recipe> loadedrecipes) {
+                        mBackendlessCollection = loadedrecipes;
 
-                convertToList(loadedrecipes);
+                        convertToList(loadedrecipes);
 
-                super.handleResponse(loadedrecipes);
-            }
-        });
+                        super.handleResponse(loadedrecipes);
+                    }
+                });
 
     }
 

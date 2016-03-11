@@ -170,7 +170,7 @@ public class Recipe implements Serializable
     {
         Backendless.Data.of( Recipe.class).find(callback);
     }
-    public static void findAsync(BackendlessDataQuery query, AsyncCallback<BackendlessCollection<Recipe>> callback)
+    public static void getRecipesbySearch(BackendlessDataQuery query, AsyncCallback<BackendlessCollection<Recipe>> callback)
     {
         Backendless.Data.of( Recipe.class ).find( query, callback );
     }

@@ -1,5 +1,7 @@
 package edu.scu.rachna.yummyrecipes.activity;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,11 +11,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.SearchView;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +39,7 @@ import edu.scu.rachna.yummyrecipes.data.LoadingCallback;
 import edu.scu.rachna.yummyrecipes.data.Recipe;
 
 public class DashboardActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
-        NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
 
     private FloatingActionButton addNewRecipeButton;
 
@@ -159,6 +164,17 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.dashboard, menu);
+        MenuItem searchItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        if(null!=searchManager ) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        }
+        searchView.setIconifiedByDefault(false);
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(this);
         return true;
     }
 
@@ -169,8 +185,8 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_search:
-                Toast.makeText(getApplicationContext(), "Search clicked!!.", Toast.LENGTH_SHORT).show();
+            case R.id.search:
+                //Toast.makeText(getApplicationContext(), "Search clicked!!.", Toast.LENGTH_SHORT).show();
                 break;
         }
         return true;
@@ -218,4 +234,18 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
         return true;
     }
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Intent searchintent = new Intent(DashboardActivity.this, SearchActivity.class);
+        searchintent.putExtra("query", query);
+        startActivity(searchintent);
+        return true;
+    }
+
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+
+        return false;
+    }
 }

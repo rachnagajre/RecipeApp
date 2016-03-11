@@ -143,6 +143,20 @@ public class MyRecipeActivity extends AppCompatActivity implements NavigationVie
         return true;
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        initializeMyRecipesList();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initializeMyRecipesList();
+    }
+
+
     private void initializeMyRecipesList() {
         BackendlessDataQuery query = new BackendlessDataQuery();
         String whereclause = "ownerId='" + Backendless.UserService.CurrentUser().getObjectId()+"' and likes>-1";
@@ -165,6 +179,7 @@ public class MyRecipeActivity extends AppCompatActivity implements NavigationVie
     }
     private void convertToList( BackendlessCollection<Recipe> nextPage )
     {
+        recipesList.clear();
         recipesList.addAll(nextPage.getCurrentPage());
         adapter.notifyDataSetChanged();
     }

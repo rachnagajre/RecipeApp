@@ -184,7 +184,10 @@ public class RecipeDetailActivity extends BaseActivity implements AdapterView.On
                             @Override
                             public void handleResponse(Long aLong) {
                                 progressDialog.hide();
+                                finish();
+                                startActivity(new Intent(RecipeDetailActivity.this, DashboardActivity.class));
                             }
+
                             @Override
                             public void handleFault(BackendlessFault backendlessFault) {
                                 toast("Can not delete current recipe.");
@@ -192,8 +195,6 @@ public class RecipeDetailActivity extends BaseActivity implements AdapterView.On
                         });
                     }
                 });
-                finish();
-                startActivity(new Intent(this, DashboardActivity.class));
                 break;
             case R.id.action_mode_close_button:
                 this.finish();

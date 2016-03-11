@@ -38,8 +38,6 @@ public class MyRecipeActivity extends AppCompatActivity implements NavigationVie
 
     private GridView myRecipesGridView;
 
-    private List<Recipe> myRecipesList = new ArrayList<>();
-
     private BackendlessUser loggedInUser;
 
     private TextView nameField;

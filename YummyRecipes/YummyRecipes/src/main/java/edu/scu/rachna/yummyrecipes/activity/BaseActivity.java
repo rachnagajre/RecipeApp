@@ -26,7 +26,7 @@ public class BaseActivity extends AppCompatActivity {
         if(this instanceof RecipeDetailActivity) {
             MenuItem shareMenuItem = menu.findItem(R.id.action_share);
             shareMenuItem.setVisible(true);
-            //TODO : Set Delete Action to false only if recipes do not belong to the user
+            //Set Delete Action to false only if recipes do not belong to the user (done in RecipeDetailActivity.java)
             MenuItem removeMenuItem = menu.findItem(R.id.action_delete);
             removeMenuItem.setVisible(false);
             MenuItem closeButton = menu.findItem(R.id.action_mode_close_button);

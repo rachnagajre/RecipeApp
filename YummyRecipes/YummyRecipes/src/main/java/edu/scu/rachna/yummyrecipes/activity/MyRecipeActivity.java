@@ -32,6 +32,7 @@ import java.util.List;
 
 import edu.scu.rachna.yummyrecipes.R;
 import edu.scu.rachna.yummyrecipes.adapter.DashboardRecipesAdapter;
+import edu.scu.rachna.yummyrecipes.data.Default;
 import edu.scu.rachna.yummyrecipes.data.DefaultCallback;
 import edu.scu.rachna.yummyrecipes.data.LoadingCallback;
 import edu.scu.rachna.yummyrecipes.data.Recipe;
@@ -63,6 +64,8 @@ public class MyRecipeActivity extends AppCompatActivity implements NavigationVie
         setContentView(R.layout.activity_my_recipe);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Backendless.initApp(this, Default.APPLICATION_ID, Default.ANDROID_SECRET_KEY,
+                Default.VERSION);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.my_recipe_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

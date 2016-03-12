@@ -25,9 +25,7 @@ import edu.scu.rachna.yummyrecipes.activity.RecipeDetailActivity;
 import edu.scu.rachna.yummyrecipes.data.DashboardRowData;
 import edu.scu.rachna.yummyrecipes.data.Recipe;
 
-/**
- * Created by Rachna on 2/5/2016.
- */
+
 public class DashboardRecipesAdapter extends BaseAdapter{
 
     private List<Recipe> recipes;

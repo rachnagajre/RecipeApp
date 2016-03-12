@@ -101,7 +101,7 @@ public class AddCommentActivity extends BaseActivity {
                                 progressDialog.dismiss();
 
                                 DialogHelper.createErrorDialog(AddCommentActivity.this,
-                                        "BackendlessFault",
+                                        "Yummy Recipe Fault",
                                         fault.getMessage()).show();
                             }
                         });

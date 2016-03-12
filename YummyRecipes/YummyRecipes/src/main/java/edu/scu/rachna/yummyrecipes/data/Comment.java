@@ -3,9 +3,7 @@ package edu.scu.rachna.yummyrecipes.data;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Created by vairavan on 3/10/16.
- */
+
 public class Comment implements Serializable {
     private Date created;
     private String objectId;

@@ -4,21 +4,21 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.SearchView;
-
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +57,8 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
 
     private TextView emailField;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,8 +84,6 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
         nameField.setText(loggedInUser.getProperty("name").toString());
         emailField.setText(loggedInUser.getEmail());
 
-        initializeRecipesList();
-
         addNewRecipeButton = (FloatingActionButton) findViewById(R.id.addNewRecipeButton);
         addNewRecipeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,31 +92,38 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
             }
         });
 
+        initializeGridView();
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+                initializeGridView();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+    }
+
+    private void initializeGridView() {
+        initializeRecipesList();
         recipesGridView = (GridView) findViewById(R.id.recipesGridView);
-        adapter=new DashboardRecipesAdapter(this, recipesList);
+        adapter = new DashboardRecipesAdapter(this, recipesList);
         recipesGridView.setAdapter(adapter);
         recipesGridView.setOnItemClickListener(this);
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        initializeRecipesList();
-        recipesGridView = (GridView) findViewById(R.id.recipesGridView);
-        adapter = new DashboardRecipesAdapter(this, recipesList);
-        recipesGridView.setAdapter(adapter);
-        recipesGridView.setOnItemClickListener(this);
+        initializeGridView();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        initializeRecipesList();
-        recipesGridView = (GridView) findViewById(R.id.recipesGridView);
-        adapter = new DashboardRecipesAdapter(this, recipesList);
-        recipesGridView.setAdapter(adapter);
-        recipesGridView.setOnItemClickListener(this);
+        initializeGridView();
     }
 
     private void initializeRecipesList() {
@@ -175,7 +182,6 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
         MenuItem searchItem = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) searchItem.getActionView();
 
-
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         if(null!=searchManager ) {
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -200,8 +206,7 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
         return true;
     }
 
-    private void convertToList( BackendlessCollection<Recipe> nextPage )
-    {
+    private void convertToList( BackendlessCollection<Recipe> nextPage) {
         recipesList.clear();
         recipesList.addAll(nextPage.getCurrentPage());
         adapter.notifyDataSetChanged();
@@ -244,16 +249,16 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        Intent searchintent = new Intent(DashboardActivity.this, SearchActivity.class);
-        searchintent.putExtra("query", query);
-        startActivity(searchintent);
+        Intent searchIntent = new Intent(DashboardActivity.this, SearchActivity.class);
+        searchIntent.putExtra("query", query);
+        searchIntent.putExtra("allRecipes", true);
+        startActivity(searchIntent);
         return true;
     }
 
-
     @Override
     public boolean onQueryTextChange(String newText) {
-
         return false;
     }
+
 }

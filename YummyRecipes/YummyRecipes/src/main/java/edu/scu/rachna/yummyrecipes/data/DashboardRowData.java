@@ -1,8 +1,6 @@
 package edu.scu.rachna.yummyrecipes.data;
 
-/**
- * Created by Rachna on 2/5/2016.
- */
+
 public class DashboardRowData {
 
     private int recipeId;

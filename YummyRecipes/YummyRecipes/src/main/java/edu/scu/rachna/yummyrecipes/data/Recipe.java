@@ -7,13 +7,15 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.persistence.BackendlessDataQuery;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 
 public class Recipe implements Serializable
 {
-    private java.util.Date created;
+    private Date created;
     private String objectId;
-    private java.util.Date updated;
+    private Date updated;
     private String ownerId;
     private BackendlessUser creator;
     private String recipeName;
@@ -21,6 +23,9 @@ public class Recipe implements Serializable
     private String directions;
     private String image;
     private int likes;
+    private int time;
+    private int serves;
+    private List<Comment> comments;
 
     public Recipe() {}
 
@@ -42,25 +47,37 @@ public class Recipe implements Serializable
 
     public String getDirections(){return directions;}
 
-    public java.util.Date getCreated()
+    public void setComments(List<Comment> comments){this.comments=comments;}
+
+    public List<Comment> getComments(){return comments;}
+
+    public Date getCreated()
     {
         return created;
     }
+
+    public void setCreated(Date created) {this.created=created;}
 
     public String getObjectId()
     {
         return objectId;
     }
 
-    public java.util.Date getUpdated()
+    public void setObjectId(String objectId){this.objectId=objectId;}
+
+    public Date getUpdated()
     {
         return updated;
     }
+
+    public void setUpdated(Date updated){this.updated=updated;}
 
     public String getOwnerId()
     {
         return ownerId;
     }
+
+    public void setOwnerId(String ownerId) {this.ownerId=ownerId;}
 
     public BackendlessUser getCreator()
     {
@@ -79,6 +96,14 @@ public class Recipe implements Serializable
     public void setLikes(int likes){this.likes=likes;}
 
     public int getLikes(){return likes;}
+
+    public void setTime(int time) {this.time=time;}
+
+    public int getTime() {return time;}
+
+    public void setServes(int serves) {this.serves=serves;}
+
+    public int getServes() {return serves;}
 
     public Recipe save()
     {
@@ -109,7 +134,8 @@ public class Recipe implements Serializable
 
     public static void findByIdAsync( String id, AsyncCallback<Recipe> callback )
     {
-        Backendless.Data.of( Recipe.class ).findById( id, callback );
+        //depth search for relations
+        Backendless.Data.of( Recipe.class ).findById( id, 1, callback );
     }
 
     public static Recipe findFirst()
@@ -145,7 +171,7 @@ public class Recipe implements Serializable
     {
         Backendless.Data.of( Recipe.class).find(callback);
     }
-    public static void findAsync(BackendlessDataQuery query, AsyncCallback<BackendlessCollection<Recipe>> callback)
+    public static void getRecipesbySearch(BackendlessDataQuery query, AsyncCallback<BackendlessCollection<Recipe>> callback)
     {
         Backendless.Data.of( Recipe.class ).find( query, callback );
     }

@@ -26,7 +26,7 @@ public class BaseActivity extends AppCompatActivity {
         if(this instanceof RecipeDetailActivity) {
             MenuItem shareMenuItem = menu.findItem(R.id.action_share);
             shareMenuItem.setVisible(true);
-            //TODO : Set Delete Action to false only if recipes do not belong to the user
+            //Set Delete Action to false only if recipes do not belong to the user (done in RecipeDetailActivity.java)
             MenuItem removeMenuItem = menu.findItem(R.id.action_delete);
             removeMenuItem.setVisible(false);
             MenuItem closeButton = menu.findItem(R.id.action_mode_close_button);
@@ -51,21 +51,8 @@ public class BaseActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_share:
-                toast("Share action ...");
-                break;
-            case R.id.action_delete :
-                toast("Delete recipe Action ...");
-                break;
             case R.id.action_mode_close_button:
                 this.finish();
-                break;
-            case R.id.action_like:
-                /**
-                 * TODO : Increment Like counter on backend less for current recipe and reload the data for RecipeDetailActivity
-                 * Reloading RecipeDetailActivity should reload the total like counter on page
-                 */
-                toast("Like action");
                 break;
             default :
                 this.finish();

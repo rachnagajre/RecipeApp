@@ -1,42 +1,44 @@
 package edu.scu.rachna.yummyrecipes.activity;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
+import com.backendless.BackendlessUser;
 import com.backendless.persistence.BackendlessDataQuery;
 import com.backendless.persistence.QueryOptions;
 
-import org.apache.commons.collections.CollectionUtils;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import edu.scu.rachna.yummyrecipes.R;
 import edu.scu.rachna.yummyrecipes.adapter.DashboardRecipesAdapter;
-import edu.scu.rachna.yummyrecipes.data.DashboardRowData;
 import edu.scu.rachna.yummyrecipes.data.Default;
+import edu.scu.rachna.yummyrecipes.data.DefaultCallback;
 import edu.scu.rachna.yummyrecipes.data.LoadingCallback;
 import edu.scu.rachna.yummyrecipes.data.Recipe;
 
 public class DashboardActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
-        NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
 
     private FloatingActionButton addNewRecipeButton;
 
@@ -47,6 +49,14 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
     private DashboardRecipesAdapter adapter;
 
     private List<Recipe> recipesList = new ArrayList<>();
+
+    private BackendlessUser loggedInUser;
+
+    private TextView nameField;
+
+    private TextView emailField;
+
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +76,12 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        initializeRecipesList();
+        View navigationHeader = (View) navigationView.getHeaderView(0);
+        nameField = (TextView) navigationHeader.findViewById(R.id.nameField);
+        emailField = (TextView) navigationHeader.findViewById(R.id.emailField);
+        loggedInUser = Backendless.UserService.CurrentUser();
+        nameField.setText(loggedInUser.getProperty("name").toString());
+        emailField.setText(loggedInUser.getEmail());
 
         addNewRecipeButton = (FloatingActionButton) findViewById(R.id.addNewRecipeButton);
         addNewRecipeButton.setOnClickListener(new View.OnClickListener() {
@@ -76,27 +91,59 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
             }
         });
 
-        recipesGridView = (GridView) findViewById(R.id.recipesGridView);
-        adapter=new DashboardRecipesAdapter(this, recipesList);
-        recipesGridView.setAdapter(adapter);
-        recipesGridView.setOnItemClickListener(this);
+        initializeGridView();
 
-    }
-
-    private void initializeRecipesList() {
-        Recipe.getAllRecipes(new LoadingCallback<BackendlessCollection<Recipe>>( this, "Getting Recipes", true )
-        {
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void handleResponse( BackendlessCollection<Recipe> loadedrecipes )
-            {
-                mBackendlessCollection = loadedrecipes;
-
-                convertToList(loadedrecipes);
-
-                super.handleResponse(loadedrecipes);
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+                initializeGridView();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
+    }
+
+    private void initializeGridView() {
+        initializeRecipesList();
+        recipesGridView = (GridView) findViewById(R.id.recipesGridView);
+        adapter = new DashboardRecipesAdapter(this, recipesList);
+        recipesGridView.setAdapter(adapter);
+        recipesGridView.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        initializeGridView();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initializeGridView();
+    }
+
+    private void initializeRecipesList() {
+        BackendlessDataQuery query = new BackendlessDataQuery();
+        String whereclause = "likes>-1";
+        query.setWhereClause(whereclause);
+        QueryOptions options = new QueryOptions();
+        options.addSortByOption("likes desc");
+        query.setWhereClause(whereclause);
+        query.setQueryOptions(options);
+        Recipe.getRecipesbySearch(query,
+                new LoadingCallback<BackendlessCollection<Recipe>>(this, "Getting Recipes", true) {
+                    @Override
+                    public void handleResponse(BackendlessCollection<Recipe> loadedrecipes) {
+                        mBackendlessCollection = loadedrecipes;
+
+                        convertToList(loadedrecipes);
+
+                        super.handleResponse(loadedrecipes);
+                    }
+                });
     }
 
     private void navigateToAddNewRecipe() {
@@ -106,7 +153,7 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //TODO : Go to Recipe Details page and pass the required recipeItemId in intent
+        //Go to Recipe Details page and pass the required recipeItemId in intent
         final Recipe recipe = recipesList.get(position);
         navigateToRecipeDetails(recipe);
     }
@@ -131,6 +178,16 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.dashboard, menu);
+        MenuItem searchItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        if(null!=searchManager ) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        }
+        searchView.setIconifiedByDefault(false);
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(this);
         return true;
     }
 
@@ -141,15 +198,15 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_search:
-                Toast.makeText(getApplicationContext(), "Search clicked!!.", Toast.LENGTH_SHORT).show();
+            case R.id.search:
+                //Toast.makeText(getApplicationContext(), "Search clicked!!.", Toast.LENGTH_SHORT).show();
                 break;
         }
         return true;
     }
 
-    private void convertToList( BackendlessCollection<Recipe> nextPage )
-    {
+    private void convertToList( BackendlessCollection<Recipe> nextPage) {
+        recipesList.clear();
         recipesList.addAll(nextPage.getCurrentPage());
         adapter.notifyDataSetChanged();
     }
@@ -162,26 +219,45 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
 
         switch(id) {
             case R.id.homeButton :
-                Toast.makeText(getApplicationContext(), "Navigation Home clicked!!.", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, DashboardActivity.class));
                 break;
             case R.id.myRecipesButton :
-                Toast.makeText(getApplicationContext(), "Navigation My Recipes clicked!!.", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getApplicationContext(), "Navigation My Recipes clicked!!.", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, MyRecipeActivity.class));
                 break;
             case R.id.logOutButton :
-              Toast.makeText(getApplicationContext(), "Navigation Logout clicked!!.", Toast.LENGTH_SHORT).show();
-               // Backendless.UserService.logout();
-                break;
-            case R.id.aboutButton :
-                Toast.makeText(getApplicationContext(), "Navigation About clicked!!.", Toast.LENGTH_SHORT).show();
+              //Toast.makeText(getApplicationContext(), "Navigation Logout clicked!!.", Toast.LENGTH_SHORT).show();
+                Backendless.UserService.logout(new DefaultCallback<Void>(DashboardActivity.this) {
+                    @Override
+                    public void handleResponse(Void response) {
+                        super.handleResponse(response);
+                        startActivity(new Intent(getBaseContext(), LoginActivity.class));
+                        finish();
+                    }
+                });
                 break;
             case R.id.helpButton :
-                Toast.makeText(getApplicationContext(), "Navigation Help clicked!!.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Go to www.yummyrecipes.com. For Help.", Toast.LENGTH_SHORT).show();
                 break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Intent searchIntent = new Intent(DashboardActivity.this, SearchActivity.class);
+        searchIntent.putExtra("query", query);
+        searchIntent.putExtra("allRecipes", true);
+        startActivity(searchIntent);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 
 }

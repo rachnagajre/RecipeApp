@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.files.BackendlessFile;
@@ -38,6 +39,8 @@ public class AddRecipeActivity extends AppCompatActivity {
     private EditText recipeMethod;
     private String imagePath;
     private Bitmap bp;
+    private BackendlessUser currentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +49,8 @@ public class AddRecipeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Backendless.initApp(this, Default.APPLICATION_ID, Default.ANDROID_SECRET_KEY, Default.VERSION);
+        currentUser = Backendless.UserService.CurrentUser();
+
         takePictureButton = (Button) findViewById(R.id.takePictureButton);
         capturedImage = (ImageView) findViewById(R.id.recipeImage);
         recipeName = (EditText) findViewById(R.id.recipeName);
@@ -69,7 +74,7 @@ public class AddRecipeActivity extends AppCompatActivity {
             bp = (Bitmap) data.getExtras().get("data");
             capturedImage.setImageBitmap(bp);
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            String imageFileName = "PN_" +Backendless.UserService.CurrentUser().getUserId()+"_"+ timeStamp + ".jpg";  //create the image file name
+            String imageFileName = "PN_" + currentUser.getUserId()+"_"+ timeStamp + ".jpg";  //create the image file name
             imagePath="https://api.backendless.com/" + Default.APPLICATION_ID + "/" + Default.VERSION + "/files/mypics/" + imageFileName;
             Backendless.Files.Android.upload(bp, Bitmap.CompressFormat.PNG, 100, imageFileName,
                     "mypics", new AsyncCallback<BackendlessFile>() {
@@ -132,12 +137,16 @@ public class AddRecipeActivity extends AppCompatActivity {
         TextView getrname = (TextView) findViewById(R.id.recipeName);
         TextView getingredients = (TextView) findViewById(R.id.recipeIngredients);
         TextView getsteps = (TextView) findViewById(R.id.recipeMethod);
+        TextView gettime = (TextView) findViewById(R.id.prepTime);
+        TextView getserves= (TextView) findViewById(R.id.serves);
 
         Recipe recipe = new Recipe();
-        recipe.setCreator(Backendless.UserService.CurrentUser());
+        recipe.setCreator(currentUser);
         recipe.setDirections(getsteps.getText().toString());
         recipe.setIngredients(getingredients.getText().toString());
         recipe.setRecipeName(getrname.getText().toString());
+        recipe.setTime(Integer.valueOf(gettime.getText().toString()));
+        recipe.setServes(Integer.valueOf(getserves.getText().toString()));
         recipe.setLikes(0);
         if (imagePath != null)
         {
@@ -148,9 +157,6 @@ public class AddRecipeActivity extends AppCompatActivity {
             public void handleResponse(Recipe recipe) {
                 super.handleResponse(recipe);
                 Intent dashboardintent = new Intent(AddRecipeActivity.this,DashboardActivity.class);
-                //orderSuccessIntent.putExtra("restaurant", restaurant);
-                //orderSuccessIntent.putExtra("location", location);
-                //orderSuccessIntent.putExtra("order", order);
                 startActivity(dashboardintent);
                 finish();
             }

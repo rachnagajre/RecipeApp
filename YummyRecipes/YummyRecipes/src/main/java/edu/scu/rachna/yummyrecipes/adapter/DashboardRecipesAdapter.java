@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +17,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.scu.rachna.yummyrecipes.R;
@@ -22,18 +25,18 @@ import edu.scu.rachna.yummyrecipes.activity.RecipeDetailActivity;
 import edu.scu.rachna.yummyrecipes.data.DashboardRowData;
 import edu.scu.rachna.yummyrecipes.data.Recipe;
 
-/**
- * Created by Rachna on 2/5/2016.
- */
-public class DashboardRecipesAdapter extends BaseAdapter {
 
-    private final List<Recipe> recipes;
+public class DashboardRecipesAdapter extends BaseAdapter{
+
+    private List<Recipe> recipes;
     private Context context;
 
     public DashboardRecipesAdapter(Context context, List<Recipe> recipes) {
         this.recipes = recipes;
         this.context = context;
     }
+
+
 
     @Override
     public int getCount() {
@@ -92,13 +95,14 @@ public class DashboardRecipesAdapter extends BaseAdapter {
         return row;
     }
 
+
     public class DashboardRowDataHolder {
         TextView recipeName;
         ImageView recipeImage;
     }
 
     private void navigateToRecipeDetails(Recipe recipe) {
-        //TODO : Go to Recipe Details page and pass the required recipeItemId in intent
+        //Go to Recipe Details page and pass the required recipeItemId in intent
         Intent recipeDetailIntent = new Intent(context, RecipeDetailActivity.class);
         recipeDetailIntent.putExtra("recipeId", recipe.getObjectId());
         context.startActivity(recipeDetailIntent);

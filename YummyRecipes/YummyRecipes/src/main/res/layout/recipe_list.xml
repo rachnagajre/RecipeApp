@@ -5,6 +5,9 @@
     android:orientation="vertical" >
 
     <TextView
+        android:maxLines="1"
+        android:singleLine="true"
+        android:ellipsize="middle"
         android:id="@+id/nameOfRecipeItem"
         android:layout_gravity="center"
         android:layout_width="wrap_content"

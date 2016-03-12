@@ -17,6 +17,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    repositories {
+        mavenCentral()
+    }
     packagingOptions {
         exclude 'META-INF/maven/com.squareup.picasso/picasso/pom.xml'
         exclude 'META-INF/maven/com.squareup.picasso/picasso/pom.properties'
@@ -30,4 +33,5 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'commons-collections:commons-collections:3.2.1'
+    compile 'com.facebook.android:facebook-android-sdk:4.+'
 }

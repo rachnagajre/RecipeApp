@@ -144,7 +144,7 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
                 } );
                 break;
             case R.id.helpButton :
-                Toast.makeText(getApplicationContext(), "Navigation Help clicked!!.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Go to www.yummyrecipes.com. For Help.", Toast.LENGTH_SHORT).show();
                 break;
         }
 

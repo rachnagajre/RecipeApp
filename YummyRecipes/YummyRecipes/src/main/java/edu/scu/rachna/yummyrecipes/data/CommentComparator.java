@@ -2,9 +2,7 @@ package edu.scu.rachna.yummyrecipes.data;
 
 import java.util.Comparator;
 
-/**
- * Created by Rachna on 3/11/2016.
- */
+
 public class CommentComparator implements Comparator<Comment> {
 
     @Override

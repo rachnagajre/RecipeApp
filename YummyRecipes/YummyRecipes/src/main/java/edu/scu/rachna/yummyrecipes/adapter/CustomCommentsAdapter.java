@@ -11,9 +11,7 @@ import java.util.List;
 
 import edu.scu.rachna.yummyrecipes.R;
 
-/**
- * Created by Rachna on 3/10/2016.
- */
+
 public class CustomCommentsAdapter extends BaseAdapter {
 
     private List<CommentRowData> commentsList;

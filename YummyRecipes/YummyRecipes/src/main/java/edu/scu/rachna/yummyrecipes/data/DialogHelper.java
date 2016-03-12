@@ -3,9 +3,6 @@ package edu.scu.rachna.yummyrecipes.data;
 import android.app.AlertDialog;
 import android.content.Context;
 
-/**
- * Provides static methods to create necessary dialogs.
- */
 public class DialogHelper
 {
     /**

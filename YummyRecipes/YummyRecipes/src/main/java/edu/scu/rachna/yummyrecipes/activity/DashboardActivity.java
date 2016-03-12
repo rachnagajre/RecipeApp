@@ -237,7 +237,7 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
                 });
                 break;
             case R.id.helpButton :
-                Toast.makeText(getApplicationContext(), "Navigation Help clicked!!.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Go to www.yummyrecipes.com. For Help.", Toast.LENGTH_SHORT).show();
                 break;
         }
 

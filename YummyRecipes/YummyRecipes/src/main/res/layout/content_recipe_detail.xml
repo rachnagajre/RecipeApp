@@ -25,11 +25,11 @@
 
         <ImageView
             android:id="@+id/recipeImage"
-            android:layout_width="fill_parent"
-            android:layout_height="200dp"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
             android:adjustViewBounds="true"
             android:paddingTop="60dp"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitStart" />
 
         <TextView
             android:id="@+id/recipeNameHeading"
@@ -42,7 +42,7 @@
 
         <TextView
             android:id="@+id/recipeName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/recipeNameHeading"
             android:ems="10"
@@ -61,7 +61,7 @@
 
         <TextView
             android:id="@+id/prepTime"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="20dp"
             android:layout_below="@+id/prepTimeHeading"
@@ -79,7 +79,7 @@
 
         <TextView
             android:id="@+id/serves"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="20dp"
             android:layout_below="@+id/servesHeading"
@@ -97,7 +97,7 @@
 
         <TextView
             android:id="@+id/recipeIngredients"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="20dp"
             android:layout_below="@+id/recipeIngredientsHeading"
@@ -116,7 +116,7 @@
 
         <TextView
             android:id="@+id/recipeMethod"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="20dp"
             android:layout_below="@+id/methodHeading"
@@ -135,7 +135,7 @@
 
         <TextView
             android:id="@+id/likesDisplay"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="20dp"
             android:layout_below="@+id/likeHeading"

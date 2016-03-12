@@ -1,18 +1,23 @@
 package edu.scu.rachna.yummyrecipes.activity;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +37,7 @@ import edu.scu.rachna.yummyrecipes.data.LoadingCallback;
 import edu.scu.rachna.yummyrecipes.data.Recipe;
 
 public class MyRecipeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        AdapterView.OnItemClickListener {
+        AdapterView.OnItemClickListener, SearchView.OnQueryTextListener {
 
     private FloatingActionButton addNewRecipeButton;
 
@@ -49,6 +54,8 @@ public class MyRecipeActivity extends AppCompatActivity implements NavigationVie
     private DashboardRecipesAdapter adapter;
 
     private List<Recipe> recipesList = new ArrayList<>();
+
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,10 +88,24 @@ public class MyRecipeActivity extends AppCompatActivity implements NavigationVie
             }
         });
 
-        initializeMyRecipesList();
+        initializeGridView();
 
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+                initializeGridView();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+    }
+
+    private void initializeGridView() {
+        initializeMyRecipesList();
         myRecipesGridView = (GridView) findViewById(R.id.myRecipesGridView);
-        adapter=new DashboardRecipesAdapter(this, recipesList);
+        adapter = new DashboardRecipesAdapter(this, recipesList);
         myRecipesGridView.setAdapter(adapter);
         myRecipesGridView.setOnItemClickListener(this);
     }
@@ -102,6 +123,37 @@ public class MyRecipeActivity extends AppCompatActivity implements NavigationVie
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.dashboard, menu);
+        MenuItem searchItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        if(null != searchManager ) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        }
+        searchView.setIconifiedByDefault(false);
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(this);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.search:
+                //Toast.makeText(getApplicationContext(), "Search clicked!!.", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return true;
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -145,13 +197,13 @@ public class MyRecipeActivity extends AppCompatActivity implements NavigationVie
     @Override
     public void onStart() {
         super.onStart();
-        initializeMyRecipesList();
+        initializeGridView();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        initializeMyRecipesList();
+        initializeGridView();
     }
 
     private void initializeMyRecipesList() {
@@ -185,4 +237,19 @@ public class MyRecipeActivity extends AppCompatActivity implements NavigationVie
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
     }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Intent searchIntent = new Intent(MyRecipeActivity.this, SearchActivity.class);
+        searchIntent.putExtra("query", query);
+        searchIntent.putExtra("allRecipes", false);
+        startActivity(searchIntent);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
 }

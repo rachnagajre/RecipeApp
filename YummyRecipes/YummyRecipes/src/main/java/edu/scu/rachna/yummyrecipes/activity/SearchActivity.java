@@ -21,6 +21,7 @@ import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
 import com.backendless.BackendlessUser;
 import com.backendless.persistence.BackendlessDataQuery;
+import com.backendless.persistence.QueryOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,8 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
 
     String searchquery;
 
+    boolean shouldSearchAllRecipes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +65,8 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         searchquery = getIntent().getStringExtra("query");
+        shouldSearchAllRecipes = getIntent().getBooleanExtra("allRecipes", false);
+
         Backendless.initApp(this, Default.APPLICATION_ID, Default.ANDROID_SECRET_KEY, Default.VERSION);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.my_recipe_drawer_layout);
@@ -150,9 +155,16 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
 
     private void initializeMyRecipesList() {
         BackendlessDataQuery query = new BackendlessDataQuery();
-        String whereclause = "recipeName LIKE '%" +searchquery+"%'";
-        Log.i("test", whereclause);
+        String whereclause = " recipeName LIKE '%" +searchquery+"%' and likes>-1 ";
+        if(!shouldSearchAllRecipes) {
+            //Only search recipes for current user
+            whereclause = whereclause + " and ownerId='" + Backendless.UserService.CurrentUser().getObjectId()+"' ";
+        }
         query.setWhereClause(whereclause);
+        QueryOptions options = new QueryOptions();
+        options.addSortByOption("likes desc");
+        query.setQueryOptions(options);
+        Log.i("test", whereclause);
         Recipe.getRecipesbySearch(query,
                 new LoadingCallback<BackendlessCollection<Recipe>>(this, "Getting Recipes", true) {
                     @Override

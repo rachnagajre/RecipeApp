@@ -70,7 +70,7 @@
 
         <activity
             android:name=".activity.MyRecipeActivity"
-            android:label="@string/title_activity_my_recipe"
+            android:label="My Yummy Recipes"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
